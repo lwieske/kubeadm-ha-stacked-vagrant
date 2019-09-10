@@ -1,0 +1,5 @@
+.DS_Store
+.kube
+.vagrant
+kubeadm/.DS_Store
+params/*

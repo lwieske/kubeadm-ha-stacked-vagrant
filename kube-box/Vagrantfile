@@ -1,0 +1,59 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VERSION = ENV['KUBE_VERSION']
+
+Vagrant.configure("2") do |config|
+
+    config.vm.box = "bento/centos-7"
+
+    config.vm.provision "shell", inline: <<-SHELL
+
+        set -x
+
+        setenforce 0
+        sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config
+
+        swapoff -a
+        sed -i '/swap/s/^/#/g' /etc/fstab
+
+        cp /vagrant/files/kubernetes.repo /etc/yum.repos.d/kubernetes.repo
+        cp /vagrant/files/k8s.conf        /etc/sysctl.d/k8s.conf
+
+        yum install -y \
+            device-mapper-persistent-data \
+            lvm2 \
+            docker \
+            kubeadm-#{VERSION} \
+            kubectl-#{VERSION} \
+            kubelet-#{VERSION} \
+            psmisc \
+            haproxy \
+            keepalived \
+            --nogpgcheck
+
+        pushd /usr/bin
+            ETCD_VERSION=3.3.15
+            curl -sSL https://github.com/etcd-io/etcd/releases/download/v${ETCD_VERSION}/etcd-v${ETCD_VERSION}-linux-amd64.tar.gz | tar xfz - etcd-v${ETCD_VERSION}-linux-amd64/etcdctl --strip-components=1 2> /dev/null
+            chown root:root etcdctl
+        popd
+
+        sysctl --system
+
+        kubeadm config images pull
+
+        systemctl stop postfix ; yum remove -y postfix
+
+        systemctl enable docker  ; systemctl start docker
+        systemctl enable kubelet ; systemctl start kubelet
+
+        kubeadm config images pull
+
+        dd if=/dev/zero of=/EMPTY bs=1M
+        rm -f /EMPTY
+
+        sync
+
+    SHELL
+
+end
