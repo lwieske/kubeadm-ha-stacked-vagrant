@@ -14,4 +14,12 @@ vagrant up
 
 sleep 60
 
-vagrant ssh m01 -c "kubectl get nodes"
+vagrant ssh m01 -c "sudo kubectl get nodes"
+
+# vagrant ssh m01 -c "sudo systemctl status kubelet"
+
+# vagrant ssh m01 -c "sudo journalctl -xeu kubelet"
+
+# vagrant ssh m01 -c "sudo systemctl status containerd"
+
+# vagrant ssh m01 -c "sudo kubectl get pods --all-namespaces"

@@ -1,0 +1,74 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VERSION = ENV['KUBE_VERSION']
+CONTAINERD_VERSION = "1.1.0"
+
+Vagrant.configure("2") do |config|
+
+    config.vbguest.auto_update = false
+
+    config.vm.box = "bento/centos-8.1"
+
+    config.vm.provision "shell", inline: <<-SHELL
+
+        set -x
+
+        echo overlay       > /etc/modules-load.d/containerd.conf
+        echo br_netfilter >> /etc/modules-load.d/containerd.conf
+
+        modprobe overlay
+        modprobe br_netfilter
+
+        echo "net.bridge.bridge-nf-call-iptables  = 1" ;> /etc/sysctl.d/99-kubernetes-cri.conf
+        echo "net.ipv4.ip_forward                 = 1" >> /etc/sysctl.d/99-kubernetes-cri.conf
+        echo "net.bridge.bridge-nf-call-ip6tables = 1" >> /etc/sysctl.d/99-kubernetes-cri.conf
+
+        sysctl --system
+
+        dnf --assumeyes --nogpgcheck install \
+            device-mapper-persistent-data \
+            iproute-tc \
+            lvm2
+
+        wget -qO - https://storage.googleapis.com/cri-containerd-release/cri-containerd-1.3.0.linux-amd64.tar.gz | \
+        tar xz -C /
+
+        cp /vagrant/files/kubernetes.repo /etc/yum.repos.d/kubernetes.repo
+
+        systemctl disable firewalld && systemctl stop firewalld
+
+        setenforce 0
+        echo "SELINUX=disabled" > /etc/sysconfig/selinux
+
+        swapoff -a
+        sed -e '/swap/ s/^#*/#/' -i /etc/fstab
+
+        cp /vagrant/files/k8s.conf /etc/sysctl.d/k8s.conf
+
+        sysctl --system
+
+        dnf --assumeyes --nogpgcheck install \
+            kubeadm \
+            kubectl \
+            kubelet
+
+        mkdir -p /etc/systemd/system/kubelet.service.d
+
+        cp /vagrant/files/0-containerd.conf /etc/systemd/system/kubelet.service.d/0-containerd.conf
+
+        systemctl daemon-reload
+
+        systemctl enable --now containerd
+        systemctl enable --now kubelet
+
+        kubeadm --v=5 --cri-socket unix:///run/containerd/containerd.sock config images pull
+
+        dd if=/dev/zero of=/EMPTY bs=1M
+        rm -f /EMPTY
+
+        sync
+
+    SHELL
+
+end

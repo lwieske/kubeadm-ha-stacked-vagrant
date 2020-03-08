@@ -1,103 +1,129 @@
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
+BOX_IMAGE = "k8s-1.17.3"
 
-KUBE_VERSION = "1.15.3"
-PREFIX       = "10.10.10"
+CONTROL_PLANE_IP  = "192.168.10.10"
+LB_COUNT          = 2
+MASTER_COUNT      = 3
+WORKER_COUNT      = 3
+LB_IP_PREFIX      = "192.168.10.1"
+MASTER_IP_PREFIX  = "192.168.10.10"
+WORKER_IP_PREFIX  = "192.168.10.20"
 
-nodes = {
-    # Name     CPU, RAM, NET, BOX
-    'lb01' => [  2,   1,  11, "proxy"                ],
-    'lb02' => [  2,   1,  12, "proxy"                ],
-    'm01'  => [  2,   1, 101, "kube-#{KUBE_VERSION}" ],
-    'm02'  => [  2,   1, 102, "kube-#{KUBE_VERSION}" ],
-    'm03'  => [  2,   1, 103, "kube-#{KUBE_VERSION}" ],
-    'w01'  => [  1,   1, 201, "kube-#{KUBE_VERSION}" ],
-    'w02'  => [  1,   1, 202, "kube-#{KUBE_VERSION}" ],
-    'w03'  => [  1,   1, 203, "kube-#{KUBE_VERSION}" ]
-}
+POD_NW_CIDR = "10.244.0.0/16"
 
-PREFIXES          = [ "10.10.10" ]
+TOKEN = "abcdef.0123456789abcdef"
+
+$loadbalancer = <<EOF
+sysctl -w net.ipv4.ip_forward=1       > /dev/null 2>&1
+sysctl -w net.ipv4.ip_nonlocal_bind=1 > /dev/null 2>&1
+cp /vagrant/lb/haproxy.cfg /etc/haproxy/haproxy.cfg
+cp /vagrant/lb/keepalived.${HOSTNAME}.cfg /etc/keepalived/keepalived.conf
+systemctl enable --now haproxy        > /dev/null 2>&1
+systemctl enable --now keepalived     > /dev/null 2>&1
+EOF
+
+$initmaster = <<EOF
+set -x
+kubeadm reset
+kubeadm init \
+  --apiserver-advertise-address=192.168.10.101 \
+  --control-plane-endpoint=#{CONTROL_PLANE_IP} \
+  --pod-network-cidr=#{POD_NW_CIDR} \
+  --token #{TOKEN} \
+  --upload-certs \
+  | tee /vagrant/params/kubeadm.log
+
+kubeadm token list | grep authentication | awk '{print $1;}' >/vagrant/params/token
+openssl x509 -in /etc/kubernetes/pki/ca.crt -noout -pubkey | \
+  openssl rsa -pubin -outform DER 2>/dev/null | \ sha256sum | \
+    cut -d' ' -f1 >/vagrant/params/discovery-token-ca-cert-hash
+grep 'certificate-key' /vagrant/params/kubeadm.log | head -n1 | awk '{print $3}' >/vagrant/params/certificate-key
+
+mkdir -p $HOME/.kube
+sudo cp -Rf /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-rc5/aio/deploy/recommended.yaml
+EOF
+
+$joinmaster = <<EOF
+set -x
+kubeadm reset
+TOKEN=`cat /vagrant/params/token`
+DISCOVERY_TOKEN_CA_CERT_HASH=`cat /vagrant/params/discovery-token-ca-cert-hash`
+CERTIFICATE_KEY=`cat /vagrant/params/certificate-key`
+kubeadm join #{CONTROL_PLANE_IP}:6443 \
+  --control-plane \
+  --apiserver-advertise-address $(/sbin/ip -o -4 addr list eth1 | awk '{print $4}' | cut -d/ -f1) \
+  --token ${TOKEN} \
+  --discovery-token-ca-cert-hash sha256:${DISCOVERY_TOKEN_CA_CERT_HASH} \
+  --certificate-key ${CERTIFICATE_KEY}
+EOF
+
+$worker = <<EOF
+kubeadm reset
+TOKEN=`cat /vagrant/params/token`
+DISCOVERY_TOKEN_CA_CERT_HASH=`cat /vagrant/params/discovery-token-ca-cert-hash`
+kubeadm join #{CONTROL_PLANE_IP}:6443 \
+  --token ${TOKEN} \
+  --discovery-token-ca-cert-hash sha256:${DISCOVERY_TOKEN_CA_CERT_HASH}
+EOF
 
 Vagrant.configure("2") do |config|
 
-    nodes.each do |name, (cpu, ram, net, box)|
+  config.vm.box               = BOX_IMAGE
+  config.vm.box_check_update  = false
 
-        config.vm.box = "kube-#{KUBE_VERSION}"
-        config.vm.box_check_update = false
+  config.vbguest.auto_update  = false
 
-        hostname = "%s" % [name]
+  config.vm.provider "virtualbox" do |l|
+    l.cpus = 1
+    l.memory = "1024"
+  end
 
-        config.hostmanager.enabled              = true
-        config.hostmanager.manage_guest         = true
-        config.hostmanager.include_offline      = true
+  config.hostmanager.enabled = true
+  config.hostmanager.manage_guest = true
 
-        config.vm.define "#{hostname}" do |box|
-
-            box.vm.hostname = "#{hostname}.local"
-
-            box.vm.network :private_network, ip: PREFIX + "." + net.to_s
-
-            box.vm.provider :virtualbox do |vbox|
-                vbox.name         = "#{name}"
-                vbox.cpus         = cpu
-                vbox.memory       = ram * 1024
-                vbox.linked_clone = true
-            end
-
-            box.vm.provision "shell", inline: <<-SHELL
-                # set -x
-                sed -i -n -e '2,$p' /etc/hosts
-                case $HOSTNAME in
-	                lb*.local)
-                        sysctl -w net.ipv4.ip_forward=1 ; sysctl -w net.ipv4.ip_nonlocal_bind=1
-                        cp /vagrant/haproxy.cfg /etc/haproxy/haproxy.cfg
-                        cp /vagrant/keepalived.#{name}.cfg /etc/keepalived/keepalived.conf
-                        systemctl disable kubelet    ; systemctl stop  kubelet
-                        systemctl disable docker     ; systemctl stop  docker
-                        systemctl enable  haproxy    ; systemctl start haproxy
-                        systemctl enable  keepalived ; systemctl start keepalived
-                        ls -la /etc/{haproxy,keepalived}/*.c*
-		                ;;
-	                m01.local)
-                        systemctl enable kubelet  > /dev/null 2>&1
-                        kubeadm init \
-                                --config /vagrant/kubeadm-config.yaml \
-                                --upload-certs \
-                            | tee /vagrant/params/kubeadm.log
-                        mkdir -p ~vagrant/.kube
-                        cp -Rf /etc/kubernetes/admin.conf ~vagrant/.kube/config
-                        chown -R vagrant:vagrant ~vagrant/.kube
-                        su -c "kubectl apply -f /vagrant/kube-flannel.yaml" vagrant
-                        kubeadm token list | grep authentication | awk '{print $1;}' >/vagrant/params/token
-                        openssl x509 -in /etc/kubernetes/pki/ca.crt -noout -pubkey | \
-                            openssl rsa -pubin -outform DER 2>/dev/null | \ sha256sum | \
-                                cut -d' ' -f1 >/vagrant/params/discovery-token-ca-cert-hash
-                        grep 'certificate-key' /vagrant/params/kubeadm.log | head -n1 | awk '{print $3}' >/vagrant/params/certificate-key
-                        cp -r .kube /vagrant
-		                ;;
-	                m*.local)
-                        systemctl enable kubelet  > /dev/null 2>&1
-                        TOKEN=`cat /vagrant/params/token`
-                        DISCOVERY_TOKEN_CA_CERT_HASH=`cat /vagrant/params/discovery-token-ca-cert-hash`
-                        CERTIFICATE_KEY=`cat /vagrant/params/certificate-key`
-                        kubeadm join 10.10.10.10:6443 \
-                                --apiserver-advertise-address $(/sbin/ip -o -4 addr list eth1 | awk '{print $4}' | cut -d/ -f1) \
-                                --token ${TOKEN} \
-                                --discovery-token-ca-cert-hash sha256:${DISCOVERY_TOKEN_CA_CERT_HASH} \
-                                --certificate-key ${CERTIFICATE_KEY} \
-                                --control-plane
-		                ;;
-	                w*.local)
-                        systemctl enable kubelet  > /dev/null 2>&1
-                        TOKEN=`cat /vagrant/params/token`
-                        DISCOVERY_TOKEN_CA_CERT_HASH=`cat /vagrant/params/discovery-token-ca-cert-hash`
-                        kubeadm join 10.10.10.10:6443 \
-                                --apiserver-advertise-address $(/sbin/ip -o -4 addr list eth1 | awk '{print $4}' | cut -d/ -f1) \
-                                --token ${TOKEN} \
-                                --discovery-token-ca-cert-hash sha256:${DISCOVERY_TOKEN_CA_CERT_HASH}
-		                ;;
-                esac
-            SHELL
-        end
+  (1..LB_COUNT).each do |i|
+    config.vm.define "lb0#{i}" do |lb|
+      lb.vm.box      = "lb"
+      lb.vm.hostname = "lb0#{i}"
+      lb.vm.network :private_network, ip: LB_IP_PREFIX + "#{i}"
+      lb.vm.provider :virtualbox do |vbox|
+        vbox.cpus   = 1
+        vbox.memory = 512
+      end
+      lb.vm.provision :shell, inline: $loadbalancer
     end
+  end
+
+  (1..MASTER_COUNT).each do |i|
+    config.vm.define "m0#{i}" do |master|
+      master.vm.hostname = "m0#{i}"
+      master.vm.network :private_network, ip: MASTER_IP_PREFIX + "#{i}"
+      master.vm.provider :virtualbox do |vbox|
+        vbox.cpus   = 2
+        vbox.memory = 2048
+      end
+      if i == 1
+        master.vm.provision :shell, inline: $initmaster
+      else
+        master.vm.provision :shell, inline: $joinmaster
+      end
+    end
+  end
+
+  (1..WORKER_COUNT).each do |i|
+    config.vm.define "w0#{i}" do |worker|
+      worker.vm.hostname = "w0#{i}"
+      worker.vm.network :private_network, ip: WORKER_IP_PREFIX + "#{i}"
+      worker.vm.provider :virtualbox do |vbox|
+        vbox.cpus   = 1
+        vbox.memory = 1024
+      end
+      worker.vm.provision :shell, inline: $worker
+    end
+  end
+
 end
