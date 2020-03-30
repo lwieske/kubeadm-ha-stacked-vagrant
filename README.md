@@ -1,4 +1,4 @@
-# kubeadm-ha-stacked-vagrant / Kubernetes v1.17.4
+# kubeadm-ha-stacked-vagrant / Kubernetes v1.18.0
 
 ![](https://raw.githubusercontent.com/lwieske/kubeadm-ha-stacked-vagrant/master/demo800x600.gif)
 
@@ -8,7 +8,7 @@ Kubernetes Cluster: kubeadm mgmt plane + (load balancer / 3 master ctrl plane) +
 
 ![](https://github.com/lwieske/kubeadm-ha-stacked-vagrant/blob/master/images/3x3-ha-stacked.png)
 
-### K8S 1.17.3
+### K8S 1.18.0
 
 ```console
                             |
@@ -39,30 +39,14 @@ asciinema: recording asciicast to demo.cast
 asciinema: exit opened program when you're done
 + set -x
 + vagrant destroy --force
-==> w03: Forcing shutdown of VM...
-==> w03: Destroying VM and associated drives...
-==> w03: [vagrant-hostmanager:guests] Updating hosts file on active guest virtual machines...
-==> w02: Forcing shutdown of VM...
-==> w02: Destroying VM and associated drives...
-==> w02: [vagrant-hostmanager:guests] Updating hosts file on active guest virtual machines...
-==> w01: Forcing shutdown of VM...
-==> w01: Destroying VM and associated drives...
-==> w01: [vagrant-hostmanager:guests] Updating hosts file on active guest virtual machines...
-==> m03: Forcing shutdown of VM...
-==> m03: Destroying VM and associated drives...
-==> m03: [vagrant-hostmanager:guests] Updating hosts file on active guest virtual machines...
-==> m02: Forcing shutdown of VM...
-==> m02: Destroying VM and associated drives...
-==> m02: [vagrant-hostmanager:guests] Updating hosts file on active guest virtual machines...
-==> m01: Forcing shutdown of VM...
-==> m01: Destroying VM and associated drives...
-==> m01: [vagrant-hostmanager:guests] Updating hosts file on active guest virtual machines...
-==> lb02: Forcing shutdown of VM...
-==> lb02: Destroying VM and associated drives...
-==> lb02: [vagrant-hostmanager:guests] Updating hosts file on active guest virtual machines...
-==> lb01: Forcing shutdown of VM...
-==> lb01: Destroying VM and associated drives...
-==> lb01: [vagrant-hostmanager:guests] Updating hosts file on active guest virtual machines...
+==> w03: VM not created. Moving on...
+==> w02: VM not created. Moving on...
+==> w01: VM not created. Moving on...
+==> m03: VM not created. Moving on...
+==> m02: VM not created. Moving on...
+==> m01: VM not created. Moving on...
+==> lb02: VM not created. Moving on...
+==> lb01: VM not created. Moving on...
 + rm -rf .vagrant
 + rm -rf params/certificate-key params/discovery-token-ca-cert-hash params/kubeadm.log params/token .kube
 + mkdir -p params
@@ -77,7 +61,7 @@ Bringing machine 'w02' up with 'virtualbox' provider...
 Bringing machine 'w03' up with 'virtualbox' provider...
 ==> lb01: Importing base box 'lb'...
 ==> lb01: Matching MAC address for NAT networking...
-==> lb01: Setting the name of the VM: kubeadm-ha-stacked-vagrant_lb01_1584786296380_49341
+==> lb01: Setting the name of the VM: kubeadm-ha-stacked-vagrant_lb01_1585584112960_70320
 ==> lb01: Clearing any previously set network interfaces...
 ==> lb01: Preparing network interfaces based on configuration...
     lb01: Adapter 1: nat
@@ -101,7 +85,7 @@ Bringing machine 'w03' up with 'virtualbox' provider...
     lb01: Running: inline script
 ==> lb02: Importing base box 'lb'...
 ==> lb02: Matching MAC address for NAT networking...
-==> lb02: Setting the name of the VM: kubeadm-ha-stacked-vagrant_lb02_1584786334480_14071
+==> lb02: Setting the name of the VM: kubeadm-ha-stacked-vagrant_lb02_1585584152403_81423
 ==> lb02: Fixed port collision for 22 => 2222. Now on port 2200.
 ==> lb02: Clearing any previously set network interfaces...
 ==> lb02: Preparing network interfaces based on configuration...
@@ -124,9 +108,9 @@ Bringing machine 'w03' up with 'virtualbox' provider...
 ==> lb02: [vagrant-hostmanager:guests] Updating hosts file on active guest virtual machines...
 ==> lb02: Running provisioner: shell...
     lb02: Running: inline script
-==> m01: Importing base box 'k8s-1.17.4'...
+==> m01: Importing base box 'k8s-1.18.0'...
 ==> m01: Matching MAC address for NAT networking...
-==> m01: Setting the name of the VM: kubeadm-ha-stacked-vagrant_m01_1584786377022_7742
+==> m01: Setting the name of the VM: kubeadm-ha-stacked-vagrant_m01_1585584197953_38467
 ==> m01: Fixed port collision for 22 => 2222. Now on port 2201.
 ==> m01: Clearing any previously set network interfaces...
 ==> m01: Preparing network interfaces based on configuration...
@@ -154,12 +138,11 @@ Bringing machine 'w03' up with 'virtualbox' provider...
     m01: [reset] Are you sure you want to proceed? [y/N]:
     m01: error execution phase preflight: aborted reset operation
     m01: To see the stack trace of this error execute with --v=5 or higher
-    m01: ++ tee /vagrant/params/kubeadm.log
     m01: ++ kubeadm init --apiserver-advertise-address=192.168.10.101 --control-plane-endpoint=192.168.10.10 --pod-network-cidr=10.244.0.0/16 --token abcdef.0123456789abcdef --upload-certs
-    m01: [init] Using Kubernetes version: v1.17.4
+    m01: ++ tee /vagrant/params/kubeadm.log
+    m01: W0330 16:03:44.896040    7523 configset.go:202] WARNING: kubeadm cannot validate component configs for API groups [kubelet.config.k8s.io kubeproxy.config.k8s.io]
+    m01: [init] Using Kubernetes version: v1.18.0
     m01: [preflight] Running pre-flight checks
-    m01: W0321 10:26:41.786227    7711 validation.go:28] Cannot validate kube-proxy config - no validator is available
-    m01: W0321 10:26:41.786261    7711 validation.go:28] Cannot validate kubelet config - no validator is available
     m01: [preflight] Pulling images required for setting up a Kubernetes cluster
     m01: [preflight] This might take a minute or two, depending on the speed of your internet connection
     m01: [preflight] You can also perform this action in beforehand using 'kubeadm config images pull'
@@ -188,22 +171,23 @@ Bringing machine 'w03' up with 'virtualbox' provider...
     m01: [kubeconfig] Writing "scheduler.conf" kubeconfig file
     m01: [control-plane] Using manifest folder "/etc/kubernetes/manifests"
     m01: [control-plane] Creating static Pod manifest for "kube-apiserver"
+    m01: W0330 16:03:48.136177    7523 manifests.go:225] the default kube-apiserver authorization-mode is "Node,RBAC"; using "Node,RBAC"
+    m01: W0330 16:03:48.138016    7523 manifests.go:225] the default kube-apiserver authorization-mode is "Node,RBAC"; using "Node,RBAC"
     m01: [control-plane] Creating static Pod manifest for "kube-controller-manager"
     m01: [control-plane] Creating static Pod manifest for "kube-scheduler"
     m01: [etcd] Creating static Pod manifest for local etcd in "/etc/kubernetes/manifests"
-    m01: W0321 10:26:46.497866    7711 manifests.go:214] the default kube-apiserver authorization-mode is "Node,RBAC"; using "Node,RBAC"
-    m01: W0321 10:26:46.499054    7711 manifests.go:214] the default kube-apiserver authorization-mode is "Node,RBAC"; using "Node,RBAC"
     m01: [wait-control-plane] Waiting for the kubelet to boot up the control plane as static Pods from directory "/etc/kubernetes/manifests". This can take up to 4m0s
-    m01: [apiclient] All control plane components are healthy after 28.536479 seconds
+    m01: [apiclient] All control plane components are healthy after 34.159295 seconds
     m01: [upload-config] Storing the configuration used in ConfigMap "kubeadm-config" in the "kube-system" Namespace
-    m01: [kubelet] Creating a ConfigMap "kubelet-config-1.17" in namespace kube-system with the configuration for the kubelets in the cluster
+    m01: [kubelet] Creating a ConfigMap "kubelet-config-1.18" in namespace kube-system with the configuration for the kubelets in the cluster
     m01: [upload-certs] Storing the certificates in Secret "kubeadm-certs" in the "kube-system" Namespace
     m01: [upload-certs] Using certificate key:
-    m01: ce3511a7c2f57e0d3d3000d870f78767c6bac77cf805df68a3880d6906c7c896
+    m01: 79017c059f5fc18633558b8978ec2093fa168901be535dcbbd9796386586e624
     m01: [mark-control-plane] Marking the node m01 as control-plane by adding the label "node-role.kubernetes.io/master=''"
     m01: [mark-control-plane] Marking the node m01 as control-plane by adding the taints [node-role.kubernetes.io/master:NoSchedule]
     m01: [bootstrap-token] Using token: abcdef.0123456789abcdef
     m01: [bootstrap-token] Configuring bootstrap tokens, cluster-info ConfigMap, RBAC Roles
+    m01: [bootstrap-token] configured RBAC rules to allow Node Bootstrap tokens to get nodes
     m01: [bootstrap-token] configured RBAC rules to allow Node Bootstrap tokens to post CSRs in order for nodes to get long term certificate credentials
     m01: [bootstrap-token] configured RBAC rules to allow the csrapprover controller automatically approve CSRs from a Node Bootstrap Token
     m01: [bootstrap-token] configured RBAC rules to allow certificate rotation for all node client certificates in the cluster
@@ -227,8 +211,8 @@ Bringing machine 'w03' up with 'virtualbox' provider...
     m01: You can now join any number of the control-plane node running the following command on each as root:
     m01:
     m01:   kubeadm join 192.168.10.10:6443 --token abcdef.0123456789abcdef \
-    m01:     --discovery-token-ca-cert-hash sha256:e23f8631fa45cd5d5ab5e157898bd4484b334d40a63afd0af48a2ea2def14db4 \
-    m01:     --control-plane --certificate-key ce3511a7c2f57e0d3d3000d870f78767c6bac77cf805df68a3880d6906c7c896
+    m01:     --discovery-token-ca-cert-hash sha256:7831b9e17320d036b6f9df3b5c87f031967b465628c5836faa2fe42f34ddb566 \
+    m01:     --control-plane --certificate-key 79017c059f5fc18633558b8978ec2093fa168901be535dcbbd9796386586e624
     m01:
     m01: Please note that the certificate-key gives access to cluster sensitive data, keep it secret!
     m01: As a safeguard, uploaded-certs will be deleted in two hours; If necessary, you can use
@@ -237,7 +221,7 @@ Bringing machine 'w03' up with 'virtualbox' provider...
     m01: Then you can join any number of worker nodes by running the following on each as root:
     m01:
     m01: kubeadm join 192.168.10.10:6443 --token abcdef.0123456789abcdef \
-    m01:     --discovery-token-ca-cert-hash sha256:e23f8631fa45cd5d5ab5e157898bd4484b334d40a63afd0af48a2ea2def14db4
+    m01:     --discovery-token-ca-cert-hash sha256:7831b9e17320d036b6f9df3b5c87f031967b465628c5836faa2fe42f34ddb566
     m01: ++ kubeadm token list
     m01: ++ grep authentication
     m01: ++ awk '{print $1;}'
@@ -279,9 +263,9 @@ Bringing machine 'w03' up with 'virtualbox' provider...
     m01: deployment.apps/kubernetes-dashboard created
     m01: service/dashboard-metrics-scraper created
     m01: deployment.apps/dashboard-metrics-scraper created
-==> m02: Importing base box 'k8s-1.17.4'...
+==> m02: Importing base box 'k8s-1.18.0'...
 ==> m02: Matching MAC address for NAT networking...
-==> m02: Setting the name of the VM: kubeadm-ha-stacked-vagrant_m02_1584786451847_7699
+==> m02: Setting the name of the VM: kubeadm-ha-stacked-vagrant_m02_1585584281726_25662
 ==> m02: Fixed port collision for 22 => 2222. Now on port 2202.
 ==> m02: Clearing any previously set network interfaces...
 ==> m02: Preparing network interfaces based on configuration...
@@ -312,13 +296,13 @@ Bringing machine 'w03' up with 'virtualbox' provider...
     m02: +++ cat /vagrant/params/token
     m02: ++ TOKEN=abcdef.0123456789abcdef
     m02: +++ cat /vagrant/params/discovery-token-ca-cert-hash
-    m02: ++ DISCOVERY_TOKEN_CA_CERT_HASH=e23f8631fa45cd5d5ab5e157898bd4484b334d40a63afd0af48a2ea2def14db4
+    m02: ++ DISCOVERY_TOKEN_CA_CERT_HASH=7831b9e17320d036b6f9df3b5c87f031967b465628c5836faa2fe42f34ddb566
     m02: +++ cat /vagrant/params/certificate-key
-    m02: ++ CERTIFICATE_KEY=ce3511a7c2f57e0d3d3000d870f78767c6bac77cf805df68a3880d6906c7c896
+    m02: ++ CERTIFICATE_KEY=79017c059f5fc18633558b8978ec2093fa168901be535dcbbd9796386586e624
     m02: +++ awk '{print $4}'
     m02: +++ /sbin/ip -o -4 addr list eth1
     m02: +++ cut -d/ -f1
-    m02: ++ kubeadm join 192.168.10.10:6443 --control-plane --apiserver-advertise-address 192.168.10.102 --token abcdef.0123456789abcdef --discovery-token-ca-cert-hash sha256:e23f8631fa45cd5d5ab5e157898bd4484b334d40a63afd0af48a2ea2def14db4 --certificate-key ce3511a7c2f57e0d3d3000d870f78767c6bac77cf805df68a3880d6906c7c896
+    m02: ++ kubeadm join 192.168.10.10:6443 --control-plane --apiserver-advertise-address 192.168.10.102 --token abcdef.0123456789abcdef --discovery-token-ca-cert-hash sha256:7831b9e17320d036b6f9df3b5c87f031967b465628c5836faa2fe42f34ddb566 --certificate-key 79017c059f5fc18633558b8978ec2093fa168901be535dcbbd9796386586e624
     m02: [preflight] Running pre-flight checks
     m02: [preflight] Reading configuration from the cluster...
     m02: [preflight] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -oyaml'
@@ -328,16 +312,16 @@ Bringing machine 'w03' up with 'virtualbox' provider...
     m02: [preflight] You can also perform this action in beforehand using 'kubeadm config images pull'
     m02: [download-certs] Downloading the certificates in Secret "kubeadm-certs" in the "kube-system" Namespace
     m02: [certs] Using certificateDir folder "/etc/kubernetes/pki"
-    m02: [certs] Generating "front-proxy-client" certificate and key
-    m02: [certs] Generating "etcd/server" certificate and key
-    m02: [certs] etcd/server serving cert is signed for DNS names [m02 localhost] and IPs [192.168.10.102 127.0.0.1 ::1]
+    m02: [certs] Generating "apiserver-kubelet-client" certificate and key
+    m02: [certs] Generating "apiserver" certificate and key
+    m02: [certs] apiserver serving cert is signed for DNS names [m02 kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local] and IPs [10.96.0.1 192.168.10.102 192.168.10.10]
     m02: [certs] Generating "etcd/peer" certificate and key
     m02: [certs] etcd/peer serving cert is signed for DNS names [m02 localhost] and IPs [192.168.10.102 127.0.0.1 ::1]
     m02: [certs] Generating "etcd/healthcheck-client" certificate and key
     m02: [certs] Generating "apiserver-etcd-client" certificate and key
-    m02: [certs] Generating "apiserver" certificate and key
-    m02: [certs] apiserver serving cert is signed for DNS names [m02 kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local] and IPs [10.96.0.1 192.168.10.102 192.168.10.10]
-    m02: [certs] Generating "apiserver-kubelet-client" certificate and key
+    m02: [certs] Generating "etcd/server" certificate and key
+    m02: [certs] etcd/server serving cert is signed for DNS names [m02 localhost] and IPs [192.168.10.102 127.0.0.1 ::1]
+    m02: [certs] Generating "front-proxy-client" certificate and key
     m02: [certs] Valid certificates and keys now exist in "/etc/kubernetes/pki"
     m02: [certs] Using the existing "sa" key
     m02: [kubeconfig] Generating kubeconfig files
@@ -347,13 +331,13 @@ Bringing machine 'w03' up with 'virtualbox' provider...
     m02: [kubeconfig] Writing "scheduler.conf" kubeconfig file
     m02: [control-plane] Using manifest folder "/etc/kubernetes/manifests"
     m02: [control-plane] Creating static Pod manifest for "kube-apiserver"
+    m02: W0330 16:05:13.851759    7784 manifests.go:225] the default kube-apiserver authorization-mode is "Node,RBAC"; using "Node,RBAC"
     m02: [control-plane] Creating static Pod manifest for "kube-controller-manager"
+    m02: W0330 16:05:13.860461    7784 manifests.go:225] the default kube-apiserver authorization-mode is "Node,RBAC"; using "Node,RBAC"
     m02: [control-plane] Creating static Pod manifest for "kube-scheduler"
-    m02: W0321 10:28:00.559499    7889 manifests.go:214] the default kube-apiserver authorization-mode is "Node,RBAC"; using "Node,RBAC"
-    m02: W0321 10:28:00.563377    7889 manifests.go:214] the default kube-apiserver authorization-mode is "Node,RBAC"; using "Node,RBAC"
-    m02: W0321 10:28:00.563995    7889 manifests.go:214] the default kube-apiserver authorization-mode is "Node,RBAC"; using "Node,RBAC"
     m02: [check-etcd] Checking that the etcd cluster is healthy
-    m02: [kubelet-start] Downloading configuration for the kubelet from the "kubelet-config-1.17" ConfigMap in the kube-system namespace
+    m02: W0330 16:05:13.862549    7784 manifests.go:225] the default kube-apiserver authorization-mode is "Node,RBAC"; using "Node,RBAC"
+    m02: [kubelet-start] Downloading configuration for the kubelet from the "kubelet-config-1.18" ConfigMap in the kube-system namespace
     m02: [kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
     m02: [kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
     m02: [kubelet-start] Starting the kubelet
@@ -361,7 +345,6 @@ Bringing machine 'w03' up with 'virtualbox' provider...
     m02: [etcd] Announced new etcd member joining to the existing etcd cluster
     m02: [etcd] Creating static Pod manifest for "etcd"
     m02: [etcd] Waiting for the new etcd member to join the cluster. This can take up to 40s
-    m02: {"level":"warn","ts":"2020-03-21T10:28:22.470Z","caller":"clientv3/retry_interceptor.go:61","msg":"retrying of unary invoker failed","target":"passthrough:///https://192.168.10.102:2379","attempt":0,"error":"rpc error: code = DeadlineExceeded desc = context deadline exceeded"}
     m02: [upload-config] Storing the configuration used in ConfigMap "kubeadm-config" in the "kube-system" Namespace
     m02: [mark-control-plane] Marking the node m02 as control-plane by adding the label "node-role.kubernetes.io/master=''"
     m02: [mark-control-plane] Marking the node m02 as control-plane by adding the taints [node-role.kubernetes.io/master:NoSchedule]
@@ -381,9 +364,9 @@ Bringing machine 'w03' up with 'virtualbox' provider...
     m02: 	sudo chown $(id -u):$(id -g) $HOME/.kube/config
     m02:
     m02: Run 'kubectl get nodes' to see this node join the cluster.
-==> m03: Importing base box 'k8s-1.17.4'...
+==> m03: Importing base box 'k8s-1.18.0'...
 ==> m03: Matching MAC address for NAT networking...
-==> m03: Setting the name of the VM: kubeadm-ha-stacked-vagrant_m03_1584786522694_84684
+==> m03: Setting the name of the VM: kubeadm-ha-stacked-vagrant_m03_1585584348253_17700
 ==> m03: Fixed port collision for 22 => 2222. Now on port 2203.
 ==> m03: Clearing any previously set network interfaces...
 ==> m03: Preparing network interfaces based on configuration...
@@ -414,13 +397,13 @@ Bringing machine 'w03' up with 'virtualbox' provider...
     m03: +++ cat /vagrant/params/token
     m03: ++ TOKEN=abcdef.0123456789abcdef
     m03: +++ cat /vagrant/params/discovery-token-ca-cert-hash
-    m03: ++ DISCOVERY_TOKEN_CA_CERT_HASH=e23f8631fa45cd5d5ab5e157898bd4484b334d40a63afd0af48a2ea2def14db4
+    m03: ++ DISCOVERY_TOKEN_CA_CERT_HASH=7831b9e17320d036b6f9df3b5c87f031967b465628c5836faa2fe42f34ddb566
     m03: +++ cat /vagrant/params/certificate-key
-    m03: ++ CERTIFICATE_KEY=ce3511a7c2f57e0d3d3000d870f78767c6bac77cf805df68a3880d6906c7c896
+    m03: ++ CERTIFICATE_KEY=79017c059f5fc18633558b8978ec2093fa168901be535dcbbd9796386586e624
     m03: +++ awk '{print $4}'
     m03: +++ cut -d/ -f1
     m03: +++ /sbin/ip -o -4 addr list eth1
-    m03: ++ kubeadm join 192.168.10.10:6443 --control-plane --apiserver-advertise-address 192.168.10.103 --token abcdef.0123456789abcdef --discovery-token-ca-cert-hash sha256:e23f8631fa45cd5d5ab5e157898bd4484b334d40a63afd0af48a2ea2def14db4 --certificate-key ce3511a7c2f57e0d3d3000d870f78767c6bac77cf805df68a3880d6906c7c896
+    m03: ++ kubeadm join 192.168.10.10:6443 --control-plane --apiserver-advertise-address 192.168.10.103 --token abcdef.0123456789abcdef --discovery-token-ca-cert-hash sha256:7831b9e17320d036b6f9df3b5c87f031967b465628c5836faa2fe42f34ddb566 --certificate-key 79017c059f5fc18633558b8978ec2093fa168901be535dcbbd9796386586e624
     m03: [preflight] Running pre-flight checks
     m03: [preflight] Reading configuration from the cluster...
     m03: [preflight] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -oyaml'
@@ -430,14 +413,14 @@ Bringing machine 'w03' up with 'virtualbox' provider...
     m03: [preflight] You can also perform this action in beforehand using 'kubeadm config images pull'
     m03: [download-certs] Downloading the certificates in Secret "kubeadm-certs" in the "kube-system" Namespace
     m03: [certs] Using certificateDir folder "/etc/kubernetes/pki"
-    m03: [certs] Generating "apiserver-kubelet-client" certificate and key
+    m03: [certs] Generating "front-proxy-client" certificate and key
     m03: [certs] Generating "apiserver" certificate and key
     m03: [certs] apiserver serving cert is signed for DNS names [m03 kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local] and IPs [10.96.0.1 192.168.10.103 192.168.10.10]
-    m03: [certs] Generating "front-proxy-client" certificate and key
-    m03: [certs] Generating "etcd/server" certificate and key
-    m03: [certs] etcd/server serving cert is signed for DNS names [m03 localhost] and IPs [192.168.10.103 127.0.0.1 ::1]
+    m03: [certs] Generating "apiserver-kubelet-client" certificate and key
     m03: [certs] Generating "etcd/peer" certificate and key
     m03: [certs] etcd/peer serving cert is signed for DNS names [m03 localhost] and IPs [192.168.10.103 127.0.0.1 ::1]
+    m03: [certs] Generating "etcd/server" certificate and key
+    m03: [certs] etcd/server serving cert is signed for DNS names [m03 localhost] and IPs [192.168.10.103 127.0.0.1 ::1]
     m03: [certs] Generating "etcd/healthcheck-client" certificate and key
     m03: [certs] Generating "apiserver-etcd-client" certificate and key
     m03: [certs] Valid certificates and keys now exist in "/etc/kubernetes/pki"
@@ -449,13 +432,13 @@ Bringing machine 'w03' up with 'virtualbox' provider...
     m03: [kubeconfig] Writing "scheduler.conf" kubeconfig file
     m03: [control-plane] Using manifest folder "/etc/kubernetes/manifests"
     m03: [control-plane] Creating static Pod manifest for "kube-apiserver"
-    m03: W0321 10:29:13.263478    8005 manifests.go:214] the default kube-apiserver authorization-mode is "Node,RBAC"; using "Node,RBAC"
     m03: [control-plane] Creating static Pod manifest for "kube-controller-manager"
     m03: [control-plane] Creating static Pod manifest for "kube-scheduler"
-    m03: W0321 10:29:13.271139    8005 manifests.go:214] the default kube-apiserver authorization-mode is "Node,RBAC"; using "Node,RBAC"
-    m03: W0321 10:29:13.272046    8005 manifests.go:214] the default kube-apiserver authorization-mode is "Node,RBAC"; using "Node,RBAC"
     m03: [check-etcd] Checking that the etcd cluster is healthy
-    m03: [kubelet-start] Downloading configuration for the kubelet from the "kubelet-config-1.17" ConfigMap in the kube-system namespace
+    m03: W0330 16:06:19.552323    7988 manifests.go:225] the default kube-apiserver authorization-mode is "Node,RBAC"; using "Node,RBAC"
+    m03: W0330 16:06:19.556698    7988 manifests.go:225] the default kube-apiserver authorization-mode is "Node,RBAC"; using "Node,RBAC"
+    m03: W0330 16:06:19.558300    7988 manifests.go:225] the default kube-apiserver authorization-mode is "Node,RBAC"; using "Node,RBAC"
+    m03: [kubelet-start] Downloading configuration for the kubelet from the "kubelet-config-1.18" ConfigMap in the kube-system namespace
     m03: [kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
     m03: [kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
     m03: [kubelet-start] Starting the kubelet
@@ -482,9 +465,9 @@ Bringing machine 'w03' up with 'virtualbox' provider...
     m03: 	sudo chown $(id -u):$(id -g) $HOME/.kube/config
     m03:
     m03: Run 'kubectl get nodes' to see this node join the cluster.
-==> w01: Importing base box 'k8s-1.17.4'...
+==> w01: Importing base box 'k8s-1.18.0'...
 ==> w01: Matching MAC address for NAT networking...
-==> w01: Setting the name of the VM: kubeadm-ha-stacked-vagrant_w01_1584786581865_75387
+==> w01: Setting the name of the VM: kubeadm-ha-stacked-vagrant_w01_1585584411456_16318
 ==> w01: Fixed port collision for 22 => 2222. Now on port 2204.
 ==> w01: Clearing any previously set network interfaces...
 ==> w01: Preparing network interfaces based on configuration...
@@ -512,10 +495,10 @@ Bringing machine 'w03' up with 'virtualbox' provider...
     w01: error execution phase preflight: aborted reset operation
     w01: To see the stack trace of this error execute with --v=5 or higher
     w01: [preflight] Running pre-flight checks
-    w01: W0321 10:30:27.779363    7999 join.go:346] [preflight] WARNING: JoinControlPane.controlPlane settings will be ignored when control-plane flag is not set.
+    w01: W0330 16:07:37.619668    8006 join.go:346] [preflight] WARNING: JoinControlPane.controlPlane settings will be ignored when control-plane flag is not set.
     w01: [preflight] Reading configuration from the cluster...
     w01: [preflight] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -oyaml'
-    w01: [kubelet-start] Downloading configuration for the kubelet from the "kubelet-config-1.17" ConfigMap in the kube-system namespace
+    w01: [kubelet-start] Downloading configuration for the kubelet from the "kubelet-config-1.18" ConfigMap in the kube-system namespace
     w01: [kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
     w01: [kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
     w01: [kubelet-start] Starting the kubelet
@@ -526,9 +509,9 @@ Bringing machine 'w03' up with 'virtualbox' provider...
     w01: * The Kubelet was informed of the new secure connection details.
     w01:
     w01: Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
-==> w02: Importing base box 'k8s-1.17.4'...
+==> w02: Importing base box 'k8s-1.18.0'...
 ==> w02: Matching MAC address for NAT networking...
-==> w02: Setting the name of the VM: kubeadm-ha-stacked-vagrant_w02_1584786654505_9922
+==> w02: Setting the name of the VM: kubeadm-ha-stacked-vagrant_w02_1585584486445_98706
 ==> w02: Fixed port collision for 22 => 2222. Now on port 2205.
 ==> w02: Clearing any previously set network interfaces...
 ==> w02: Preparing network interfaces based on configuration...
@@ -556,10 +539,10 @@ Bringing machine 'w03' up with 'virtualbox' provider...
     w02: error execution phase preflight: aborted reset operation
     w02: To see the stack trace of this error execute with --v=5 or higher
     w02: [preflight] Running pre-flight checks
-    w02: W0321 10:31:40.550932    8013 join.go:346] [preflight] WARNING: JoinControlPane.controlPlane settings will be ignored when control-plane flag is not set.
+    w02: W0330 16:08:55.860900    8002 join.go:346] [preflight] WARNING: JoinControlPane.controlPlane settings will be ignored when control-plane flag is not set.
     w02: [preflight] Reading configuration from the cluster...
     w02: [preflight] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -oyaml'
-    w02: [kubelet-start] Downloading configuration for the kubelet from the "kubelet-config-1.17" ConfigMap in the kube-system namespace
+    w02: [kubelet-start] Downloading configuration for the kubelet from the "kubelet-config-1.18" ConfigMap in the kube-system namespace
     w02: [kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
     w02: [kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
     w02: [kubelet-start] Starting the kubelet
@@ -570,9 +553,9 @@ Bringing machine 'w03' up with 'virtualbox' provider...
     w02: * The Kubelet was informed of the new secure connection details.
     w02:
     w02: Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
-==> w03: Importing base box 'k8s-1.17.4'...
+==> w03: Importing base box 'k8s-1.18.0'...
 ==> w03: Matching MAC address for NAT networking...
-==> w03: Setting the name of the VM: kubeadm-ha-stacked-vagrant_w03_1584786730230_4041
+==> w03: Setting the name of the VM: kubeadm-ha-stacked-vagrant_w03_1585584566936_9250
 ==> w03: Fixed port collision for 22 => 2222. Now on port 2206.
 ==> w03: Clearing any previously set network interfaces...
 ==> w03: Preparing network interfaces based on configuration...
@@ -600,10 +583,10 @@ Bringing machine 'w03' up with 'virtualbox' provider...
     w03: error execution phase preflight: aborted reset operation
     w03: To see the stack trace of this error execute with --v=5 or higher
     w03: [preflight] Running pre-flight checks
-    w03: W0321 10:32:56.812077    8000 join.go:346] [preflight] WARNING: JoinControlPane.controlPlane settings will be ignored when control-plane flag is not set.
+    w03: W0330 16:10:16.441605    7998 join.go:346] [preflight] WARNING: JoinControlPane.controlPlane settings will be ignored when control-plane flag is not set.
     w03: [preflight] Reading configuration from the cluster...
     w03: [preflight] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -oyaml'
-    w03: [kubelet-start] Downloading configuration for the kubelet from the "kubelet-config-1.17" ConfigMap in the kube-system namespace
+    w03: [kubelet-start] Downloading configuration for the kubelet from the "kubelet-config-1.18" ConfigMap in the kube-system namespace
     w03: [kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
     w03: [kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
     w03: [kubelet-start] Starting the kubelet
@@ -617,12 +600,12 @@ Bringing machine 'w03' up with 'virtualbox' provider...
 + sleep 60
 + vagrant ssh m01 -c 'sudo kubectl get nodes'
 NAME   STATUS   ROLES    AGE     VERSION
-m01    Ready    master   6m59s   v1.17.4
-m02    Ready    master   6m2s    v1.17.4
-m03    Ready    master   4m50s   v1.17.4
-w01    Ready    <none>   3m34s   v1.17.4
-w02    Ready    <none>   2m21s   v1.17.4
-w03    Ready    <none>   65s     v1.17.4
+m01    Ready    master   7m11s   v1.18.0
+m02    Ready    master   6m5s    v1.18.0
+m03    Ready    master   5m      v1.18.0
+w01    Ready    <none>   3m44s   v1.18.0
+w02    Ready    <none>   2m24s   v1.18.0
+w03    Ready    <none>   65s     v1.18.0
 Connection to 127.0.0.1 closed.
 asciinema: recording finished
 asciinema: asciicast saved to demo.cast
@@ -630,11 +613,11 @@ asciinema: asciicast saved to demo.cast
 ==> Loading demo.cast...
 ==> Spawning PhantomJS renderer...
 ==> Generating frame screenshots...
-==> Combining 333 screenshots into GIF file...
+==> Combining 313 screenshots into GIF file...
 gifsicle: warning: huge GIF, conserving memory (processing may take a while)
 ==> Done.
 + gifsicle --colors 4 --resize 800x600 demo.gif
 gifsicle: warning: huge GIF, conserving memory (processing may take a while)
 + rm -f demo.cast demo.gif
->
+> 
 ```
