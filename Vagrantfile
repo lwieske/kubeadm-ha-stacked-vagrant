@@ -1,4 +1,4 @@
-BOX_IMAGE = "k8s-1.18.0"
+BOX_IMAGE = "k8s-1.18.2"
 
 CONTROL_PLANE_IP  = "192.168.10.10"
 LB_COUNT          = 2
@@ -23,7 +23,7 @@ EOF
 
 $initmaster = <<EOF
 set -x
-kubeadm reset
+kubeadm reset --force
 kubeadm init \
   --apiserver-advertise-address=192.168.10.101 \
   --control-plane-endpoint=#{CONTROL_PLANE_IP} \
@@ -49,7 +49,7 @@ EOF
 
 $joinmaster = <<EOF
 set -x
-kubeadm reset
+kubeadm reset --force
 TOKEN=`cat /vagrant/params/token`
 DISCOVERY_TOKEN_CA_CERT_HASH=`cat /vagrant/params/discovery-token-ca-cert-hash`
 CERTIFICATE_KEY=`cat /vagrant/params/certificate-key`
@@ -62,7 +62,7 @@ kubeadm join #{CONTROL_PLANE_IP}:6443 \
 EOF
 
 $worker = <<EOF
-kubeadm reset
+kubeadm reset --force
 TOKEN=`cat /vagrant/params/token`
 DISCOVERY_TOKEN_CA_CERT_HASH=`cat /vagrant/params/discovery-token-ca-cert-hash`
 kubeadm join #{CONTROL_PLANE_IP}:6443 \
