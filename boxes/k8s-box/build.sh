@@ -5,13 +5,13 @@ set -x
 vagrant destroy --force
 rm -rf .vagrant k8s-*.box
 
-KUBE_VERSION=`curl -sSL https://dl.k8s.io/release/stable.txt | sed 's/v//'`
+KUBERNETES_VERSION="1.18.3"
 
-KUBE_VERSION=${KUBE_VERSION} vagrant up
+vagrant up
 
-vagrant package --output k8s-${KUBE_VERSION}.box
+vagrant package --output k8s-${KUBERNETES_VERSION}.box
 
-vagrant box add k8s-${KUBE_VERSION} k8s-${KUBE_VERSION}.box --force
+vagrant box add k8s-${KUBERNETES_VERSION} k8s-${KUBERNETES_VERSION}.box --force
 
 vagrant destroy --force
 rm -rf .vagrant k8s-*.box
