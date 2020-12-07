@@ -1,4 +1,4 @@
-BOX_IMAGE = "k8s-1.18.3"
+BOX_IMAGE = "k8s-1.19.4"
 
 CONTROL_PLANE_IP  = "192.168.10.10"
 LB_COUNT          = 2
@@ -23,7 +23,6 @@ EOF
 
 $initmaster = <<EOF
 set -x
-kubeadm reset --force
 kubeadm init \
   --apiserver-advertise-address=192.168.10.101 \
   --control-plane-endpoint=#{CONTROL_PLANE_IP} \
@@ -42,15 +41,13 @@ mkdir -p $HOME/.kube
 sudo cp -Rf /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
-#kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
-kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-rc5/aio/deploy/recommended.yaml
 EOF
 
 $joinmaster = <<EOF
 set -x
-kubeadm reset --force
 TOKEN=`cat /vagrant/params/token`
 DISCOVERY_TOKEN_CA_CERT_HASH=`cat /vagrant/params/discovery-token-ca-cert-hash`
 CERTIFICATE_KEY=`cat /vagrant/params/certificate-key`
@@ -63,7 +60,6 @@ kubeadm join #{CONTROL_PLANE_IP}:6443 \
 EOF
 
 $worker = <<EOF
-kubeadm reset --force
 TOKEN=`cat /vagrant/params/token`
 DISCOVERY_TOKEN_CA_CERT_HASH=`cat /vagrant/params/discovery-token-ca-cert-hash`
 kubeadm join #{CONTROL_PLANE_IP}:6443 \

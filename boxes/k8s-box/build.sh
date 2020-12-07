@@ -5,7 +5,7 @@ set -x
 vagrant destroy --force
 rm -rf .vagrant k8s-*.box
 
-KUBERNETES_VERSION="1.18.3"
+KUBERNETES_VERSION="1.19.4"
 
 vagrant up
 
