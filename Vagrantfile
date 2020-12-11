@@ -1,4 +1,4 @@
-BOX_IMAGE = "k8s-1.19.4"
+BOX_IMAGE = "k8s-1.20.0"
 
 CONTROL_PLANE_IP  = "192.168.10.10"
 LB_COUNT          = 2
