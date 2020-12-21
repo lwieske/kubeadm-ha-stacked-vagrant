@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+KUBERNETES_VERSION="1.20.1"
+
 set -x
 
 vagrant destroy --force
@@ -10,7 +12,7 @@ rm -rf params/* .kube
 
 mkdir -p params
 
-vagrant up
+KUBERNETES_VERSION=${KUBERNETES_VERSION} vagrant up
 #vagrant up lb01 lb02 m01 m02 m03 w01 w02 w03
 #vagrant up lb01 m01 w01 w02 w03
 #vagrant up lb01 m01 w01 w02
