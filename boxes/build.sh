@@ -2,8 +2,11 @@
 
 set -x
 
+KUBERNETES_VERSION="1.20.1"
+CONTAINERD_VERSION="1.4.3"
+
 pushd k8s-box
-    ./build.sh
+    KUBERNETES_VERSION=${KUBERNETES_VERSION} CONTAINERD_VERSION=${CONTAINERD_VERSION} ./build.sh
 popd
 
 pushd lb-box

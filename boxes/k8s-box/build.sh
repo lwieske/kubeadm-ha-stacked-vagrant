@@ -5,8 +5,6 @@ set -x
 vagrant destroy --force
 rm -rf .vagrant k8s-*.box
 
-KUBERNETES_VERSION="1.20.0"
-
 vagrant up
 
 vagrant package --output k8s-${KUBERNETES_VERSION}.box
