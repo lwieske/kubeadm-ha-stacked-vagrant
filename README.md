@@ -1,4 +1,4 @@
-# kubeadm-ha-stacked-vagrant / Kubernetes v1.20.2
+# kubeadm-ha-stacked-vagrant / Kubernetes v1.20.4
 
 ![](https://raw.githubusercontent.com/lwieske/kubeadm-ha-stacked-vagrant/master/demo800x600.gif)
 
@@ -8,7 +8,7 @@ Kubernetes Cluster: kubeadm mgmt plane + (load balancer / 3 master ctrl plane) +
 
 ![](https://github.com/lwieske/kubeadm-ha-stacked-vagrant/blob/master/images/3x3-ha-stacked.png)
 
-### K8S 1.20.2
+### K8S 1.20.4
 
 ```console
                             |
@@ -37,7 +37,7 @@ Kubernetes Cluster: kubeadm mgmt plane + (load balancer / 3 master ctrl plane) +
 + asciinema rec -y -c 'bash -x run.sh' demo.cast
 asciinema: recording asciicast to demo.cast
 asciinema: exit opened program when you're done
-+ KUBERNETES_VERSION=1.20.2
++ KUBERNETES_VERSION=1.20.4
 + set -x
 + vagrant destroy --force
 ==> w03: VM not created. Moving on...
@@ -51,7 +51,7 @@ asciinema: exit opened program when you're done
 + rm -rf .vagrant
 + rm -rf params/certificate-key params/discovery-token-ca-cert-hash params/kubeadm.log params/token .kube
 + mkdir -p params
-+ KUBERNETES_VERSION=1.20.2
++ KUBERNETES_VERSION=1.20.4
 + vagrant up
 Bringing machine 'lb01' up with 'virtualbox' provider...
 Bringing machine 'lb02' up with 'virtualbox' provider...
@@ -110,7 +110,7 @@ Bringing machine 'w03' up with 'virtualbox' provider...
 ==> lb02: [vagrant-hostmanager:guests] Updating hosts file on active guest virtual machines...
 ==> lb02: Running provisioner: shell...
     lb02: Running: inline script
-==> m01: Importing base box 'k8s-1.20.2'...
+==> m01: Importing base box 'k8s-1.20.4'...
 ==> m01: Matching MAC address for NAT networking...
 ==> m01: Setting the name of the VM: kubeadm-ha-stacked-vagrant_m01_1612277670850_22425
 ==> m01: Fixed port collision for 22 => 2222. Now on port 2201.
@@ -137,7 +137,7 @@ Bringing machine 'w03' up with 'virtualbox' provider...
     m01: Running: inline script
     m01: ++ kubeadm init --apiserver-advertise-address=192.168.10.101 --control-plane-endpoint=192.168.10.10 --pod-network-cidr=10.244.0.0/16 --token abcdef.0123456789abcdef --upload-certs
     m01: ++ tee /vagrant/params/kubeadm.log
-    m01: [init] Using Kubernetes version: v1.20.2
+    m01: [init] Using Kubernetes version: v1.20.4
     m01: [preflight] Running pre-flight checks
     m01: [preflight] Pulling images required for setting up a Kubernetes cluster
     m01: [preflight] This might take a minute or two, depending on the speed of your internet connection
@@ -257,7 +257,7 @@ Bringing machine 'w03' up with 'virtualbox' provider...
     m01: deployment.apps/kubernetes-dashboard created
     m01: service/dashboard-metrics-scraper created
     m01: deployment.apps/dashboard-metrics-scraper created
-==> m02: Importing base box 'k8s-1.20.2'...
+==> m02: Importing base box 'k8s-1.20.4'...
 ==> m02: Matching MAC address for NAT networking...
 ==> m02: Setting the name of the VM: kubeadm-ha-stacked-vagrant_m02_1612277749232_19963
 ==> m02: Fixed port collision for 22 => 2222. Now on port 2202.
@@ -349,7 +349,7 @@ Bringing machine 'w03' up with 'virtualbox' provider...
     m02: 	sudo chown $(id -u):$(id -g) $HOME/.kube/config
     m02:
     m02: Run 'kubectl get nodes' to see this node join the cluster.
-==> m03: Importing base box 'k8s-1.20.2'...
+==> m03: Importing base box 'k8s-1.20.4'...
 ==> m03: Matching MAC address for NAT networking...
 ==> m03: Setting the name of the VM: kubeadm-ha-stacked-vagrant_m03_1612277814666_52046
 ==> m03: Fixed port collision for 22 => 2222. Now on port 2203.
@@ -441,7 +441,7 @@ Bringing machine 'w03' up with 'virtualbox' provider...
     m03: 	sudo chown $(id -u):$(id -g) $HOME/.kube/config
     m03:
     m03: Run 'kubectl get nodes' to see this node join the cluster.
-==> w01: Importing base box 'k8s-1.20.2'...
+==> w01: Importing base box 'k8s-1.20.4'...
 ==> w01: Matching MAC address for NAT networking...
 ==> w01: Setting the name of the VM: kubeadm-ha-stacked-vagrant_w01_1612277872469_39376
 ==> w01: Fixed port collision for 22 => 2222. Now on port 2204.
@@ -479,7 +479,7 @@ Bringing machine 'w03' up with 'virtualbox' provider...
     w01: * The Kubelet was informed of the new secure connection details.
     w01:
     w01: Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
-==> w02: Importing base box 'k8s-1.20.2'...
+==> w02: Importing base box 'k8s-1.20.4'...
 ==> w02: Matching MAC address for NAT networking...
 ==> w02: Setting the name of the VM: kubeadm-ha-stacked-vagrant_w02_1612277933437_14437
 ==> w02: Fixed port collision for 22 => 2222. Now on port 2205.
@@ -517,7 +517,7 @@ Bringing machine 'w03' up with 'virtualbox' provider...
     w02: * The Kubelet was informed of the new secure connection details.
     w02:
     w02: Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
-==> w03: Importing base box 'k8s-1.20.2'...
+==> w03: Importing base box 'k8s-1.20.4'...
 ==> w03: Matching MAC address for NAT networking...
 ==> w03: Setting the name of the VM: kubeadm-ha-stacked-vagrant_w03_1612277992092_89123
 ==> w03: Fixed port collision for 22 => 2222. Now on port 2206.
@@ -558,12 +558,12 @@ Bringing machine 'w03' up with 'virtualbox' provider...
 + sleep 60
 + vagrant ssh m01 -c 'sudo kubectl get nodes'
 NAME   STATUS   ROLES                  AGE     VERSION
-m01    Ready    control-plane,master   6m4s    v1.20.2
-m02    Ready    control-plane,master   5m11s   v1.20.2
-m03    Ready    control-plane,master   4m5s    v1.20.2
-w01    Ready    <none>                 3m1s    v1.20.2
-w02    Ready    <none>                 2m4s    v1.20.2
-w03    Ready    <none>                 65s     v1.20.2
+m01    Ready    control-plane,master   6m4s    v1.20.4
+m02    Ready    control-plane,master   5m11s   v1.20.4
+m03    Ready    control-plane,master   4m5s    v1.20.4
+w01    Ready    <none>                 3m1s    v1.20.4
+w02    Ready    <none>                 2m4s    v1.20.4
+w03    Ready    <none>                 65s     v1.20.4
 Connection to 127.0.0.1 closed.
 asciinema: recording finished
 asciinema: asciicast saved to demo.cast

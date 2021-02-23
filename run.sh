@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-KUBERNETES_VERSION="1.20.2"
+KUBERNETES_VERSION="1.20.4"
 
 set -x
 
