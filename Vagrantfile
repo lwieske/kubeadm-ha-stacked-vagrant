@@ -76,9 +76,10 @@ Vagrant.configure("2") do |config|
 
   config.vbguest.auto_update  = false
 
-  config.vm.provider "virtualbox" do |l|
-    l.cpus = 1
-    l.memory = "1024"
+  config.vm.provider "virtualbox" do |vbox|
+    vbox.cpus           = 1
+    vbox.memory         = "1024"
+    vbox.linked_clone   = true
   end
 
   config.hostmanager.enabled = true
