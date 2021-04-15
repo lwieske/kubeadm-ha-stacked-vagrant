@@ -24,7 +24,7 @@ systemctl enable --now keepalived     > /dev/null 2>&1
 EOF
 
 $initmaster = <<EOF
-set -x
+# set -x
 kubeadm init \
   --apiserver-advertise-address=192.168.10.101 \
   --control-plane-endpoint=#{CONTROL_PLANE_IP} \
@@ -49,7 +49,7 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-r
 EOF
 
 $joinmaster = <<EOF
-set -x
+# set -x
 TOKEN=`cat /vagrant/params/token`
 DISCOVERY_TOKEN_CA_CERT_HASH=`cat /vagrant/params/discovery-token-ca-cert-hash`
 CERTIFICATE_KEY=`cat /vagrant/params/certificate-key`
