@@ -1,4 +1,4 @@
-# kubeadm-ha-stacked-vagrant / Kubernetes v1.21.0
+# kubeadm-ha-stacked-vagrant / Kubernetes v1.21.1
 
 ![](https://raw.githubusercontent.com/lwieske/kubeadm-ha-stacked-vagrant/controller/demo800x600.gif)
 
@@ -8,7 +8,7 @@ Kubernetes Cluster: kubeadm mgmt plane + (load balancer / 3 controller ctrl plan
 
 ![](https://github.com/lwieske/kubeadm-ha-stacked-vagrant/blob/controller/images/3x3-ha-stacked.png)
 
-### K8S 1.21.0
+### K8S 1.21.1
 
 ```console
                             |
@@ -37,9 +37,9 @@ Kubernetes Cluster: kubeadm mgmt plane + (load balancer / 3 controller ctrl plan
 + asciinema rec -y -c 'bash -x run.sh' demo.cast
 asciinema: recording asciicast to demo.cast
 asciinema: exit opened program when you're done
-+ KUBERNETES_VERSION=1.21.0
++ KUBERNETES_VERSION=1.21.1
 + set -x
-+ KUBERNETES_VERSION=1.21.0
++ KUBERNETES_VERSION=1.21.1
 + vagrant up
 Bringing machine 'lb01' up with 'virtualbox' provider...
 Bringing machine 'lb02' up with 'virtualbox' provider...
@@ -56,7 +56,7 @@ Bringing machine 'e03' up with 'virtualbox' provider...
 ==> lb01: Importing base box 'lb'...
 ==> lb01: Cloning VM...
 ==> lb01: Matching MAC address for NAT networking...
-==> lb01: Setting the name of the VM: kubeadm-ha-stacked-vagrant_lb01_1621331756659_54512
+==> lb01: Setting the name of the VM: kubeadm-ha-stacked-vagrant_lb01_1621334049224_66856
 ==> lb01: Clearing any previously set network interfaces...
 ==> lb01: Preparing network interfaces based on configuration...
     lb01: Adapter 1: nat
@@ -80,7 +80,7 @@ Bringing machine 'e03' up with 'virtualbox' provider...
     lb01: Running: inline script
 ==> lb02: Cloning VM...
 ==> lb02: Matching MAC address for NAT networking...
-==> lb02: Setting the name of the VM: kubeadm-ha-stacked-vagrant_lb02_1621331781518_23242
+==> lb02: Setting the name of the VM: kubeadm-ha-stacked-vagrant_lb02_1621334074274_69094
 ==> lb02: Fixed port collision for 22 => 2222. Now on port 2200.
 ==> lb02: Clearing any previously set network interfaces...
 ==> lb02: Preparing network interfaces based on configuration...
@@ -107,10 +107,10 @@ Bringing machine 'e03' up with 'virtualbox' provider...
     c01: This is a one time operation. Once the master VM is prepared,
     c01: it will be used as a base for linked clones, making the creation
     c01: of new VMs take milliseconds on a modern system.
-==> c01: Importing base box 'k8s-1.21.0'...
+==> c01: Importing base box 'k8s-1.21.1'...
 ==> c01: Cloning VM...
 ==> c01: Matching MAC address for NAT networking...
-==> c01: Setting the name of the VM: kubeadm-ha-stacked-vagrant_c01_1621331821163_33166
+==> c01: Setting the name of the VM: kubeadm-ha-stacked-vagrant_c01_1621334113222_56861
 ==> c01: Fixed port collision for 22 => 2222. Now on port 2201.
 ==> c01: Clearing any previously set network interfaces...
 ==> c01: Preparing network interfaces based on configuration...
@@ -167,13 +167,12 @@ Bringing machine 'e03' up with 'virtualbox' provider...
     c01: [control-plane] Creating static Pod manifest for "kube-scheduler"
     c01: [etcd] Creating static Pod manifest for local etcd in "/etc/kubernetes/manifests"
     c01: [wait-control-plane] Waiting for the kubelet to boot up the control plane as static Pods from directory "/etc/kubernetes/manifests". This can take up to 4m0s
-    c01: [kubelet-check] Initial timeout of 40s passed.
-    c01: [apiclient] All control plane components are healthy after 78.590601 seconds
+    c01: [apiclient] All control plane components are healthy after 32.570199 seconds
     c01: [upload-config] Storing the configuration used in ConfigMap "kubeadm-config" in the "kube-system" Namespace
     c01: [kubelet] Creating a ConfigMap "kubelet-config-1.21" in namespace kube-system with the configuration for the kubelets in the cluster
     c01: [upload-certs] Storing the certificates in Secret "kubeadm-certs" in the "kube-system" Namespace
     c01: [upload-certs] Using certificate key:
-    c01: 9810af3a7f0c6c538d5861b40ccb4830553430038c992a1f3916728410a4f501
+    c01: b46efef6f2e443e42224f75c2485216d3f69aa86dee16f90612c449af89b3d58
     c01: [mark-control-plane] Marking the node c01 as control-plane by adding the labels: [node-role.kubernetes.io/master(deprecated) node-role.kubernetes.io/control-plane node.kubernetes.io/exclude-from-external-load-balancers]
     c01: [mark-control-plane] Marking the node c01 as control-plane by adding the taints [node-role.kubernetes.io/master:NoSchedule]
     c01: [bootstrap-token] Using token: abcdef.0123456789abcdef
@@ -206,8 +205,9 @@ Bringing machine 'e03' up with 'virtualbox' provider...
     c01: You can now join any number of the control-plane node running the following command on each as root:
     c01:
     c01:   kubeadm join 192.168.10.10:6443 --token abcdef.0123456789abcdef \
-    c01: 	--discovery-token-ca-cert-hash sha256:b51d93be6922a2df70ee9fe5d3cb51bbe3ae89b41855cf6fc82119865a5a9fd3 \
-    c01: 	--control-plane --certificate-key 9810af3a7f0c6c538d5861b40ccb4830553430038c992a1f3916728410a4f501
+    c01: 	--discovery-token-ca-cert-hash sha256:5cf0c162ae135717a01e42b3d0c72720c1d8fc3c76c43dfbaecb5fb6fc6dccef \
+    c01: 	--control-plane --certificate-key b46efef6f2e443e42224f75c2485216d3f69aa86dee16f90612c449af89b3d58
+    c01:
     c01:
     c01: Please note that the certificate-key gives access to cluster sensitive data, keep it secret!
     c01: As a safeguard, uploaded-certs will be deleted in two hours; If necessary, you can use
@@ -216,7 +216,7 @@ Bringing machine 'e03' up with 'virtualbox' provider...
     c01: Then you can join any number of worker nodes by running the following on each as root:
     c01:
     c01: kubeadm join 192.168.10.10:6443 --token abcdef.0123456789abcdef \
-    c01: 	--discovery-token-ca-cert-hash sha256:b51d93be6922a2df70ee9fe5d3cb51bbe3ae89b41855cf6fc82119865a5a9fd3
+    c01: 	--discovery-token-ca-cert-hash sha256:5cf0c162ae135717a01e42b3d0c72720c1d8fc3c76c43dfbaecb5fb6fc6dccef
     c01: Warning: policy/v1beta1 PodSecurityPolicy is deprecated in v1.21+, unavailable in v1.25+
     c01: podsecuritypolicy.policy/psp.flannel.unprivileged created
     c01: clusterrole.rbac.authorization.k8s.io/flannel created
@@ -240,7 +240,7 @@ Bringing machine 'e03' up with 'virtualbox' provider...
     c01: deployment.apps/dashboard-metrics-scraper created
 ==> c02: Cloning VM...
 ==> c02: Matching MAC address for NAT networking...
-==> c02: Setting the name of the VM: kubeadm-ha-stacked-vagrant_c02_1621331937349_23880
+==> c02: Setting the name of the VM: kubeadm-ha-stacked-vagrant_c02_1621334186245_63057
 ==> c02: Fixed port collision for 22 => 2222. Now on port 2202.
 ==> c02: Clearing any previously set network interfaces...
 ==> c02: Preparing network interfaces based on configuration...
@@ -272,16 +272,16 @@ Bringing machine 'e03' up with 'virtualbox' provider...
     c02: [preflight] You can also perform this action in beforehand using 'kubeadm config images pull'
     c02: [download-certs] Downloading the certificates in Secret "kubeadm-certs" in the "kube-system" Namespace
     c02: [certs] Using certificateDir folder "/etc/kubernetes/pki"
-    c02: [certs] Generating "apiserver-kubelet-client" certificate and key
-    c02: [certs] Generating "apiserver" certificate and key
-    c02: [certs] apiserver serving cert is signed for DNS names [c02 kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local] and IPs [10.96.0.1 192.168.10.102 192.168.10.10]
-    c02: [certs] Generating "front-proxy-client" certificate and key
-    c02: [certs] Generating "apiserver-etcd-client" certificate and key
     c02: [certs] Generating "etcd/server" certificate and key
     c02: [certs] etcd/server serving cert is signed for DNS names [c02 localhost] and IPs [192.168.10.102 127.0.0.1 ::1]
     c02: [certs] Generating "etcd/peer" certificate and key
     c02: [certs] etcd/peer serving cert is signed for DNS names [c02 localhost] and IPs [192.168.10.102 127.0.0.1 ::1]
     c02: [certs] Generating "etcd/healthcheck-client" certificate and key
+    c02: [certs] Generating "apiserver-etcd-client" certificate and key
+    c02: [certs] Generating "apiserver" certificate and key
+    c02: [certs] apiserver serving cert is signed for DNS names [c02 kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local] and IPs [10.96.0.1 192.168.10.102 192.168.10.10]
+    c02: [certs] Generating "apiserver-kubelet-client" certificate and key
+    c02: [certs] Generating "front-proxy-client" certificate and key
     c02: [certs] Valid certificates and keys now exist in "/etc/kubernetes/pki"
     c02: [certs] Using the existing "sa" key
     c02: [kubeconfig] Generating kubeconfig files
@@ -322,7 +322,7 @@ Bringing machine 'e03' up with 'virtualbox' provider...
     c02: Run 'kubectl get nodes' to see this node join the cluster.
 ==> c03: Cloning VM...
 ==> c03: Matching MAC address for NAT networking...
-==> c03: Setting the name of the VM: kubeadm-ha-stacked-vagrant_c03_1621332002859_26596
+==> c03: Setting the name of the VM: kubeadm-ha-stacked-vagrant_c03_1621334245080_55566
 ==> c03: Fixed port collision for 22 => 2222. Now on port 2203.
 ==> c03: Clearing any previously set network interfaces...
 ==> c03: Preparing network interfaces based on configuration...
@@ -355,12 +355,12 @@ Bringing machine 'e03' up with 'virtualbox' provider...
     c03: [download-certs] Downloading the certificates in Secret "kubeadm-certs" in the "kube-system" Namespace
     c03: [certs] Using certificateDir folder "/etc/kubernetes/pki"
     c03: [certs] Generating "front-proxy-client" certificate and key
-    c03: [certs] Generating "etcd/server" certificate and key
-    c03: [certs] etcd/server serving cert is signed for DNS names [c03 localhost] and IPs [192.168.10.103 127.0.0.1 ::1]
-    c03: [certs] Generating "apiserver-etcd-client" certificate and key
     c03: [certs] Generating "etcd/peer" certificate and key
     c03: [certs] etcd/peer serving cert is signed for DNS names [c03 localhost] and IPs [192.168.10.103 127.0.0.1 ::1]
     c03: [certs] Generating "etcd/healthcheck-client" certificate and key
+    c03: [certs] Generating "apiserver-etcd-client" certificate and key
+    c03: [certs] Generating "etcd/server" certificate and key
+    c03: [certs] etcd/server serving cert is signed for DNS names [c03 localhost] and IPs [192.168.10.103 127.0.0.1 ::1]
     c03: [certs] Generating "apiserver" certificate and key
     c03: [certs] apiserver serving cert is signed for DNS names [c03 kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local] and IPs [10.96.0.1 192.168.10.103 192.168.10.10]
     c03: [certs] Generating "apiserver-kubelet-client" certificate and key
@@ -404,7 +404,7 @@ Bringing machine 'e03' up with 'virtualbox' provider...
     c03: Run 'kubectl get nodes' to see this node join the cluster.
 ==> e01: Cloning VM...
 ==> e01: Matching MAC address for NAT networking...
-==> e01: Setting the name of the VM: kubeadm-ha-stacked-vagrant_e01_1621332055700_28641
+==> e01: Setting the name of the VM: kubeadm-ha-stacked-vagrant_e01_1621334294545_69035
 ==> e01: Fixed port collision for 22 => 2222. Now on port 2204.
 ==> e01: Clearing any previously set network interfaces...
 ==> e01: Preparing network interfaces based on configuration...
@@ -442,7 +442,7 @@ Bringing machine 'e03' up with 'virtualbox' provider...
     e01: Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
 ==> e02: Cloning VM...
 ==> e02: Matching MAC address for NAT networking...
-==> e02: Setting the name of the VM: kubeadm-ha-stacked-vagrant_e02_1621332095998_98070
+==> e02: Setting the name of the VM: kubeadm-ha-stacked-vagrant_e02_1621334337913_55725
 ==> e02: Fixed port collision for 22 => 2222. Now on port 2205.
 ==> e02: Clearing any previously set network interfaces...
 ==> e02: Preparing network interfaces based on configuration...
@@ -480,7 +480,7 @@ Bringing machine 'e03' up with 'virtualbox' provider...
     e02: Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
 ==> e03: Cloning VM...
 ==> e03: Matching MAC address for NAT networking...
-==> e03: Setting the name of the VM: kubeadm-ha-stacked-vagrant_e03_1621332135816_61100
+==> e03: Setting the name of the VM: kubeadm-ha-stacked-vagrant_e03_1621334375951_31396
 ==> e03: Fixed port collision for 22 => 2222. Now on port 2206.
 ==> e03: Clearing any previously set network interfaces...
 ==> e03: Preparing network interfaces based on configuration...
@@ -519,12 +519,12 @@ Bringing machine 'e03' up with 'virtualbox' provider...
 + sleep 60
 + vagrant ssh c01 -c 'sudo kubectl get nodes'
 NAME   STATUS   ROLES                  AGE     VERSION
-c01    Ready    control-plane,master   5m3s    v1.21.0
-c02    Ready    control-plane,master   4m17s   v1.21.0
-c03    Ready    control-plane,master   3m10s   v1.21.0
-e01    Ready    <none>                 2m22s   v1.21.0
-e02    Ready    <none>                 102s    v1.21.0
-e03    Ready    <none>                 64s     v1.21.0
+c01    Ready    control-plane,master   4m52s   v1.21.1
+c02    Ready    control-plane,master   4m9s    v1.21.1
+c03    Ready    control-plane,master   3m10s   v1.21.1
+e01    Ready    <none>                 2m18s   v1.21.1
+e02    Ready    <none>                 100s    v1.21.1
+e03    Ready    <none>                 63s     v1.21.1
 Connection to 127.0.0.1 closed.
 asciinema: recording finished
 asciinema: asciicast saved to demo.cast
@@ -533,8 +533,10 @@ asciinema: asciicast saved to demo.cast
 ==> Spawning PhantomJS renderer...
 ==> Generating frame screenshots...
 ==> Combining 262 screenshots into GIF file...
+gifsicle: warning: huge GIF, conserving memory (processing may take a while)
 ==> Done.
 + gifsicle --colors 8 --resize 800x600 demo.gif
+gifsicle: warning: huge GIF, conserving memory (processing may take a while)
 + rm -f demo.cast demo.gif
 > 
 ```
