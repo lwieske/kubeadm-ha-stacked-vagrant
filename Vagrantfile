@@ -2,13 +2,13 @@ KUBERNETES_VERSION = ENV["KUBERNETES_VERSION"]
 
 BOX_IMAGE = "k8s-#{KUBERNETES_VERSION}"
 
-CONTROL_PLANE_IP  = "192.168.10.10"
-LB_COUNT          = 2
-MASTER_COUNT      = 3
-WORKER_COUNT      = 3
-LB_IP_PREFIX      = "192.168.10.1"
-MASTER_IP_PREFIX  = "192.168.10.10"
-WORKER_IP_PREFIX  = "192.168.10.20"
+CONTROL_PLANE_IP      = "192.168.10.10"
+LB_COUNT              = 2
+CONTROLLER_COUNT      = 3
+EXECUTOR_COUNT        = 3
+LB_IP_PREFIX          = "192.168.10.1"
+CONTROLLER_IP_PREFIX  = "192.168.10.10"
+EXECUTOR_IP_PREFIX    = "192.168.10.20"
 
 POD_NW_CIDR = "10.244.0.0/16"
 
@@ -23,7 +23,7 @@ systemctl enable --now haproxy        > /dev/null 2>&1
 systemctl enable --now keepalived     > /dev/null 2>&1
 EOF
 
-$initmaster = <<EOF
+$initcontroller = <<EOF
 # set -x
 kubeadm init \
   --apiserver-advertise-address=192.168.10.101 \
@@ -48,7 +48,7 @@ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documen
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-rc5/aio/deploy/recommended.yaml
 EOF
 
-$joinmaster = <<EOF
+$joincontroller = <<EOF
 # set -x
 TOKEN=`cat /vagrant/params/token`
 DISCOVERY_TOKEN_CA_CERT_HASH=`cat /vagrant/params/discovery-token-ca-cert-hash`
@@ -61,7 +61,7 @@ kubeadm join #{CONTROL_PLANE_IP}:6443 \
   --certificate-key ${CERTIFICATE_KEY}
 EOF
 
-$worker = <<EOF
+$joinexecutor = <<EOF
 TOKEN=`cat /vagrant/params/token`
 DISCOVERY_TOKEN_CA_CERT_HASH=`cat /vagrant/params/discovery-token-ca-cert-hash`
 kubeadm join #{CONTROL_PLANE_IP}:6443 \
@@ -98,31 +98,31 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  (1..MASTER_COUNT).each do |i|
-    config.vm.define "m0#{i}" do |master|
-      master.vm.hostname = "m0#{i}"
-      master.vm.network :private_network, ip: MASTER_IP_PREFIX + "#{i}"
-      master.vm.provider :virtualbox do |vbox|
+  (1..CONTROLLER_COUNT).each do |i|
+    config.vm.define "c0#{i}" do |controller|
+      controller.vm.hostname = "c0#{i}"
+      controller.vm.network :private_network, ip: CONTROLLER_IP_PREFIX + "#{i}"
+      controller.vm.provider :virtualbox do |vbox|
         vbox.cpus   = 2
         vbox.memory = 2048
       end
       if i == 1
-        master.vm.provision :shell, inline: $initmaster
+        controller.vm.provision :shell, inline: $initcontroller
       else
-        master.vm.provision :shell, inline: $joinmaster
+        controller.vm.provision :shell, inline: $joincontroller
       end
     end
   end
 
-  (1..WORKER_COUNT).each do |i|
-    config.vm.define "w0#{i}" do |worker|
-      worker.vm.hostname = "w0#{i}"
-      worker.vm.network :private_network, ip: WORKER_IP_PREFIX + "#{i}"
-      worker.vm.provider :virtualbox do |vbox|
+  (1..EXECUTOR_COUNT).each do |i|
+    config.vm.define "e0#{i}" do |executor|
+      executor.vm.hostname = "e0#{i}"
+      executor.vm.network :private_network, ip: EXECUTOR_IP_PREFIX + "#{i}"
+      executor.vm.provider :virtualbox do |vbox|
         vbox.cpus   = 1
         vbox.memory = 1024
       end
-      worker.vm.provision :shell, inline: $worker
+      executor.vm.provision :shell, inline: $joinexecutor
     end
   end
 
