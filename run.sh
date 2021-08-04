@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-KUBERNETES_VERSION="1.21.1"
+KUBERNETES_VERSION="1.22.0"
 
-# vagrant destroy --force
+vagrant destroy --force
 
-# rm -rf .vagrant
+rm -rf .vagrant
 
-# rm -rf params/* .kube
+rm -rf params/* .kube
 
-# mkdir -p params
+mkdir -p params
 
 set -x
 

@@ -1,4 +1,4 @@
-# kubeadm-ha-stacked-vagrant / Kubernetes v1.21.1
+# kubeadm-ha-stacked-vagrant / Kubernetes v1.22.0
 
 ![](https://raw.githubusercontent.com/lwieske/kubeadm-ha-stacked-vagrant/controller/demo800x600.gif)
 
@@ -8,7 +8,7 @@ Kubernetes Cluster: kubeadm mgmt plane + (load balancer / 3 controller ctrl plan
 
 ![](https://github.com/lwieske/kubeadm-ha-stacked-vagrant/blob/controller/images/3x3-ha-stacked.png)
 
-### K8S 1.21.1
+### K8S 1.22.0
 
 ```console
                             |
@@ -37,9 +37,9 @@ Kubernetes Cluster: kubeadm mgmt plane + (load balancer / 3 controller ctrl plan
 + asciinema rec -y -c 'bash -x run.sh' demo.cast
 asciinema: recording asciicast to demo.cast
 asciinema: exit opened program when you're done
-+ KUBERNETES_VERSION=1.21.1
++ KUBERNETES_VERSION=1.22.0
 + set -x
-+ KUBERNETES_VERSION=1.21.1
++ KUBERNETES_VERSION=1.22.0
 + vagrant up
 Bringing machine 'lb01' up with 'virtualbox' provider...
 Bringing machine 'lb02' up with 'virtualbox' provider...
@@ -107,7 +107,7 @@ Bringing machine 'e03' up with 'virtualbox' provider...
     c01: This is a one time operation. Once the master VM is prepared,
     c01: it will be used as a base for linked clones, making the creation
     c01: of new VMs take milliseconds on a modern system.
-==> c01: Importing base box 'k8s-1.21.1'...
+==> c01: Importing base box 'k8s-1.22.0'...
 ==> c01: Cloning VM...
 ==> c01: Matching MAC address for NAT networking...
 ==> c01: Setting the name of the VM: kubeadm-ha-stacked-vagrant_c01_1621334113222_56861
@@ -133,7 +133,7 @@ Bringing machine 'e03' up with 'virtualbox' provider...
 ==> c01: [vagrant-hostmanager:guests] Updating hosts file on active guest virtual machines...
 ==> c01: Running provisioner: shell...
     c01: Running: inline script
-    c01: [init] Using Kubernetes version: v1.21.1
+    c01: [init] Using Kubernetes version: v1.22.0
     c01: [preflight] Running pre-flight checks
     c01: [preflight] Pulling images required for setting up a Kubernetes cluster
     c01: [preflight] This might take a minute or two, depending on the speed of your internet connection
@@ -519,12 +519,12 @@ Bringing machine 'e03' up with 'virtualbox' provider...
 + sleep 60
 + vagrant ssh c01 -c 'sudo kubectl get nodes'
 NAME   STATUS   ROLES                  AGE     VERSION
-c01    Ready    control-plane,master   4m52s   v1.21.1
-c02    Ready    control-plane,master   4m9s    v1.21.1
-c03    Ready    control-plane,master   3m10s   v1.21.1
-e01    Ready    <none>                 2m18s   v1.21.1
-e02    Ready    <none>                 100s    v1.21.1
-e03    Ready    <none>                 63s     v1.21.1
+c01    Ready    control-plane,master   4m52s   v1.22.0
+c02    Ready    control-plane,master   4m9s    v1.22.0
+c03    Ready    control-plane,master   3m10s   v1.22.0
+e01    Ready    <none>                 2m18s   v1.22.0
+e02    Ready    <none>                 100s    v1.22.0
+e03    Ready    <none>                 63s     v1.22.0
 Connection to 127.0.0.1 closed.
 asciinema: recording finished
 asciinema: asciicast saved to demo.cast
