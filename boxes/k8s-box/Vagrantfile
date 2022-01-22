@@ -8,11 +8,24 @@ Vagrant.configure("2") do |config|
 
     config.vbguest.auto_update = false
 
-    config.vm.box = "bento/almalinux-8.4"
+    config.vm.box = "bento/almalinux-8.5"
 
-    config.vm.provision "shell", inline: <<-SHELL
+    config.vm.provision "shell",
+        env:
+            {
+                "KUBERNETES_VERSION" => KUBERNETES_VERSION, 
+                "CONTAINERD_VERSION" => CONTAINERD_VERSION
+            },
+        inline: <<-SHELL
 
         set -x
+
+        echo ${KUBERNETES_VERSION}
+        echo ${CONTAINERD_VERSION}
+
+        export PATH=/usr/local/bin:${PATH}
+
+        printenv PATH
 
         echo overlay       > /etc/modules-load.d/containerd.conf
         echo br_netfilter >> /etc/modules-load.d/containerd.conf
@@ -27,14 +40,11 @@ Vagrant.configure("2") do |config|
         sysctl --system
 
         dnf --assumeyes --nogpgcheck install \
+            conntrack \
             device-mapper-persistent-data \
             iproute-tc \
-            lvm2
-
-        cp /vagrant/files/docker-ce.repo /etc/yum.repos.d/docker-ce.repo
-        cp /vagrant/files/kubernetes.repo /etc/yum.repos.d/kubernetes.repo
-
-        yum-config-manager --enable docker-ce-nightly
+            lvm2 \
+            socat
 
         systemctl disable firewalld && systemctl stop firewalld
 
@@ -48,24 +58,30 @@ Vagrant.configure("2") do |config|
 
         sysctl --system
 
-        dnf --assumeyes --nogpgcheck install      \
-            kubeadm-#{KUBERNETES_VERSION}         \
-            kubectl-#{KUBERNETES_VERSION}         \
-            kubelet-#{KUBERNETES_VERSION}         \
-            containerd.io-#{CONTAINERD_VERSION}
+        pushd /tmp
+            curl -L https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/cri-containerd-cni-${CONTAINERD_VERSION}-linux-amd64.tar.gz | \      
+            tar --no-overwrite-dir -C / --group=root --owner=root -xzf -
+            systemctl daemon-reload
+            systemctl start containerd
+        popd
 
-        mkdir -p /etc/systemd/system/kubelet.service.d
+        pushd /usr/local/bin
+            curl -L --remote-name-all https://storage.googleapis.com/kubernetes-release/release/v${KUBERNETES_VERSION}/bin/linux/amd64/{kubeadm,kubelet,kubectl}
+            chmod +x {kubeadm,kubelet,kubectl}
+        popd
 
-        cp /vagrant/files/0-containerd.conf /etc/systemd/system/kubelet.service.d/0-containerd.conf
+        mkdir -p /etc/systemd/system/kubelet.service.d /etc/containerd
 
+        cp /vagrant/files/kubelet.service /etc/systemd/system/kubelet.service
+        cp /vagrant/files/10-containerd.conf /etc/systemd/system/kubelet.service.d/10-containerd.conf
         containerd config default > /etc/containerd/config.toml
-
+        mkdir -p /var/lib/kubelet/
+        
         systemctl daemon-reload
 
         systemctl enable --now containerd
         systemctl enable --now kubelet
 
-        #kubeadm --v=5 --cri-socket unix:///run/containerd/containerd.sock config images pull
         kubeadm --v=5 config images pull
 
         dd if=/dev/zero of=/EMPTY bs=1M

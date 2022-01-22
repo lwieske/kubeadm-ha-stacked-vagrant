@@ -4,7 +4,9 @@ set -x
 
 rm -f demo.cast
 
-asciinema rec -y -c "bash -x run.sh" demo.cast
+asciinema rec -y -c "bash -x run.sh | tee run.log" demo.cast
+
+vagrant destroy --force
 
 asciicast2gif demo.cast demo.gif
 

@@ -10,49 +10,59 @@ LB_IP_PREFIX          = "192.168.10.1"
 CONTROLLER_IP_PREFIX  = "192.168.10.10"
 EXECUTOR_IP_PREFIX    = "192.168.10.20"
 
-POD_NW_CIDR = "10.244.0.0/16"
+POD_NETWORK_CIDR      = "10.244.0.0/16"
 
-TOKEN = "abcdef.0123456789abcdef"
+TOKEN                 = "abcdef.0123456789abcdef"
 
 $loadbalancer = <<EOF
 sysctl -w net.ipv4.ip_forward=1       > /dev/null 2>&1
 sysctl -w net.ipv4.ip_nonlocal_bind=1 > /dev/null 2>&1
-cp /vagrant/lb/haproxy.cfg /etc/haproxy/haproxy.cfg
-cp /vagrant/lb/keepalived.${HOSTNAME}.cfg /etc/keepalived/keepalived.conf
+cp /vagrant/files/lb/haproxy.cfg /etc/haproxy/haproxy.cfg
+cp /vagrant/files/lb/keepalived.${HOSTNAME}.cfg /etc/keepalived/keepalived.conf
 systemctl enable --now haproxy        > /dev/null 2>&1
 systemctl enable --now keepalived     > /dev/null 2>&1
 EOF
 
 $initcontroller = <<EOF
 # set -x
+export PATH=/usr/local/bin:${PATH}
+
 kubeadm init \
   --apiserver-advertise-address=192.168.10.101 \
   --control-plane-endpoint=#{CONTROL_PLANE_IP} \
-  --pod-network-cidr=#{POD_NW_CIDR} \
+  --pod-network-cidr=#{POD_NETWORK_CIDR} \
   --token #{TOKEN} \
   --upload-certs \
-  | tee /vagrant/params/kubeadm.log
+  | tee /vagrant/files/params/kubeadm.log
 
-kubeadm token list | grep authentication | awk '{print $1;}' >/vagrant/params/token
+kubeadm token list | grep authentication | awk '{print $1;}' >/vagrant/files/params/token
 openssl x509 -in /etc/kubernetes/pki/ca.crt -noout -pubkey | \
   openssl rsa -pubin -outform DER 2>/dev/null | \ sha256sum | \
-    cut -d' ' -f1 >/vagrant/params/discovery-token-ca-cert-hash
-grep 'certificate-key' /vagrant/params/kubeadm.log | head -n1 | awk '{print $3}' >/vagrant/params/certificate-key
+    cut -d' ' -f1 >/vagrant/files/params/discovery-token-ca-cert-hash
+grep 'certificate-key' /vagrant/files/params/kubeadm.log | head -n1 | awk '{print $3}' >/vagrant/files/params/certificate-key
 
 mkdir -p $HOME/.kube
 sudo cp -Rf /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
+sudo cp -Rf /etc/kubernetes/admin.conf /vagrant/files/kubeconfig/config
+sudo chown $(id -u):$(id -g) /vagrant/files/kubeconfig/config
 
-kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+# kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
+curl --silent https://docs.projectcalico.org/manifests/calico.yaml | \
+sed 's:policy/v1beta1:policy/v1:g' | \
+kubectl apply -f -
 
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-rc5/aio/deploy/recommended.yaml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.4.0/aio/deploy/recommended.yaml
 EOF
 
 $joincontroller = <<EOF
 # set -x
-TOKEN=`cat /vagrant/params/token`
-DISCOVERY_TOKEN_CA_CERT_HASH=`cat /vagrant/params/discovery-token-ca-cert-hash`
-CERTIFICATE_KEY=`cat /vagrant/params/certificate-key`
+export PATH=/usr/local/bin:${PATH}
+
+TOKEN=`cat /vagrant/files/params/token`
+DISCOVERY_TOKEN_CA_CERT_HASH=`cat /vagrant/files/params/discovery-token-ca-cert-hash`
+CERTIFICATE_KEY=`cat /vagrant/files/params/certificate-key`
+
 kubeadm join #{CONTROL_PLANE_IP}:6443 \
   --control-plane \
   --apiserver-advertise-address $(/sbin/ip -o -4 addr list eth1 | awk '{print $4}' | cut -d/ -f1) \
@@ -62,8 +72,12 @@ kubeadm join #{CONTROL_PLANE_IP}:6443 \
 EOF
 
 $joinexecutor = <<EOF
-TOKEN=`cat /vagrant/params/token`
-DISCOVERY_TOKEN_CA_CERT_HASH=`cat /vagrant/params/discovery-token-ca-cert-hash`
+# set -x
+export PATH=/usr/local/bin:${PATH}
+
+TOKEN=`cat /vagrant/files/params/token`
+DISCOVERY_TOKEN_CA_CERT_HASH=`cat /vagrant/files/params/discovery-token-ca-cert-hash`
+
 kubeadm join #{CONTROL_PLANE_IP}:6443 \
   --token ${TOKEN} \
   --discovery-token-ca-cert-hash sha256:${DISCOVERY_TOKEN_CA_CERT_HASH}

@@ -5,7 +5,7 @@ Vagrant.configure("2") do |config|
 
     config.vbguest.auto_update = false
 
-    config.vm.box = "bento/almalinux-8.4"
+    config.vm.box = "bento/almalinux-8.5"
 
     config.vm.provision "shell", inline: <<-SHELL
 
@@ -13,13 +13,15 @@ Vagrant.configure("2") do |config|
 
         sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config
 
+#        dnf --assumeyes upgrade --refresh
+
         dnf --assumeyes --nogpgcheck install \
             haproxy \
             keepalived
 
         sysctl --system
 
-        dnf --assumeyes remove -y postfix > /dev/null 2>&1
+        dnf --assumeyes remove -y postfix
 
         dd if=/dev/zero of=/EMPTY bs=1M
         rm -f /EMPTY
