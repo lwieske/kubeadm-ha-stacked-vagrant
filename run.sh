@@ -6,10 +6,6 @@ vagrant destroy --force
 
 rm -rf .vagrant
 
-rm -rf params/* .kube
-
-mkdir -p params
-
 set -x
 
 KUBERNETES_VERSION=${KUBERNETES_VERSION} vagrant up
@@ -19,3 +15,5 @@ sleep 60
 kubectl --kubeconfig files/kubeconfig/config get nodes
 
 kubectl --kubeconfig files/kubeconfig/config get pods --all-namespaces
+
+rm files/kubeconfig/* files/params/*

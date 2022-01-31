@@ -1,4 +1,4 @@
-# kubeadm-ha-stacked-vagrant / Kubernetes v1.23.2
+# kubeadm-ha-stacked-vagrant / Kubernetes v1.23.3
 
 ![](demo800x600.gif)
 
@@ -8,7 +8,7 @@ Kubernetes Cluster: kubeadm mgmt plane + (load balancer / 3 controller ctrl plan
 
 ![](images/3x3-ha-stacked.png)
 
-### K8S 1.23.2
+### K8S 1.23.3
 
 ```console
                             |
@@ -39,7 +39,7 @@ asciinema: recording asciicast to demo.cast
 asciinema: exit opened program when you're done
 ++ curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt
 ++ sed s/v//g
-+ KUBERNETES_VERSION=1.23.2
++ KUBERNETES_VERSION=1.23.3
 + vagrant destroy --force
 ==> e03: VM not created. Moving on...
 ==> e02: VM not created. Moving on...
@@ -53,7 +53,7 @@ asciinema: exit opened program when you're done
 + rm -rf 'params/*' .kube
 + mkdir -p params
 + set -x
-+ KUBERNETES_VERSION=1.23.2
++ KUBERNETES_VERSION=1.23.3
 + vagrant up
 Bringing machine 'lb01' up with 'virtualbox' provider...
 Bringing machine 'lb02' up with 'virtualbox' provider...
@@ -155,7 +155,7 @@ Bringing machine 'e03' up with 'virtualbox' provider...
 ==> c01: [vagrant-hostmanager:guests] Updating hosts file on active guest virtual machines...
 ==> c01: Running provisioner: shell...
     c01: Running: inline script
-    c01: [init] Using Kubernetes version: v1.23.2
+    c01: [init] Using Kubernetes version: v1.23.3
     c01: [preflight] Running pre-flight checks
     c01: [preflight] Pulling images required for setting up a Kubernetes cluster
     c01: [preflight] This might take a minute or two, depending on the speed of your internet connection
@@ -596,12 +596,12 @@ Bringing machine 'e03' up with 'virtualbox' provider...
 + sleep 60
 + kubectl --kubeconfig files/kubeconfig/config get nodes
 NAME   STATUS   ROLES                  AGE     VERSION
-c01    Ready    control-plane,master   9m31s   v1.23.2
-c02    Ready    control-plane,master   7m55s   v1.23.2
-c03    Ready    control-plane,master   6m6s    v1.23.2
-e01    Ready    <none>                 4m21s   v1.23.2
-e02    Ready    <none>                 2m42s   v1.23.2
-e03    Ready    <none>                 63s     v1.23.2
+c01    Ready    control-plane,master   9m31s   v1.23.3
+c02    Ready    control-plane,master   7m55s   v1.23.3
+c03    Ready    control-plane,master   6m6s    v1.23.3
+e01    Ready    <none>                 4m21s   v1.23.3
+e02    Ready    <none>                 2m42s   v1.23.3
+e03    Ready    <none>                 63s     v1.23.3
 + kubectl --kubeconfig files/kubeconfig/config get pods --all-namespaces
 NAMESPACE              NAME                                         READY   STATUS    RESTARTS        AGE
 kube-system            calico-kube-controllers-85b5b5888d-zp7sx     1/1     Running   0               9m25s
