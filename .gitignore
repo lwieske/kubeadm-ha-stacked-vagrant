@@ -2,5 +2,5 @@
 .kube
 .vagrant
 kubeadm/.DS_Store
-files/kubeconfig
+files/kubeconfig/*
 files/params/*
