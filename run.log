@@ -16,7 +16,7 @@ Bringing machine 'e02' up with 'virtualbox' provider...
 Bringing machine 'e03' up with 'virtualbox' provider...
 ==> lb01: Cloning VM...
 [K==> lb01: Matching MAC address for NAT networking...
-==> lb01: Setting the name of the VM: kubeadm-ha-stacked-vagrant_lb01_1651680656915_28787
+==> lb01: Setting the name of the VM: kubeadm-ha-stacked-vagrant_lb01_1655719311988_51093
 ==> lb01: Clearing any previously set network interfaces...
 ==> lb01: Preparing network interfaces based on configuration...
     lb01: Adapter 1: nat
@@ -46,7 +46,7 @@ Bringing machine 'e03' up with 'virtualbox' provider...
     lb01: Running: inline script
 ==> lb02: Cloning VM...
 [K==> lb02: Matching MAC address for NAT networking...
-==> lb02: Setting the name of the VM: kubeadm-ha-stacked-vagrant_lb02_1651680734718_66382
+==> lb02: Setting the name of the VM: kubeadm-ha-stacked-vagrant_lb02_1655719389909_40964
 ==> lb02: Fixed port collision for 22 => 2222. Now on port 2200.
 ==> lb02: Clearing any previously set network interfaces...
 ==> lb02: Preparing network interfaces based on configuration...
@@ -77,7 +77,7 @@ Bringing machine 'e03' up with 'virtualbox' provider...
     lb02: Running: inline script
 ==> c01: Cloning VM...
 [K==> c01: Matching MAC address for NAT networking...
-==> c01: Setting the name of the VM: kubeadm-ha-stacked-vagrant_c01_1651680813285_10979
+==> c01: Setting the name of the VM: kubeadm-ha-stacked-vagrant_c01_1655719468160_98949
 ==> c01: Fixed port collision for 22 => 2222. Now on port 2201.
 ==> c01: Clearing any previously set network interfaces...
 ==> c01: Preparing network interfaces based on configuration...
@@ -106,7 +106,7 @@ Bringing machine 'e03' up with 'virtualbox' provider...
 ==> c01: [vagrant-hostmanager:guests] Updating hosts file on active guest virtual machines...
 ==> c01: Running provisioner: shell...
     c01: Running: inline script
-    c01: [init] Using Kubernetes version: v1.24.0
+    c01: [init] Using Kubernetes version: v1.24.2
     c01: [preflight] Running pre-flight checks
     c01: [preflight] Pulling images required for setting up a Kubernetes cluster
     c01: [preflight] This might take a minute or two, depending on the speed of your internet connection
@@ -140,12 +140,12 @@ Bringing machine 'e03' up with 'virtualbox' provider...
     c01: [control-plane] Creating static Pod manifest for "kube-scheduler"
     c01: [etcd] Creating static Pod manifest for local etcd in "/etc/kubernetes/manifests"
     c01: [wait-control-plane] Waiting for the kubelet to boot up the control plane as static Pods from directory "/etc/kubernetes/manifests". This can take up to 4m0s
-    c01: [apiclient] All control plane components are healthy after 16.876912 seconds
+    c01: [apiclient] All control plane components are healthy after 15.328358 seconds
     c01: [upload-config] Storing the configuration used in ConfigMap "kubeadm-config" in the "kube-system" Namespace
     c01: [kubelet] Creating a ConfigMap "kubelet-config" in namespace kube-system with the configuration for the kubelets in the cluster
     c01: [upload-certs] Storing the certificates in Secret "kubeadm-certs" in the "kube-system" Namespace
     c01: [upload-certs] Using certificate key:
-    c01: 7e29d6216ff6d8d4de462ad90d5977b4d6d3207f43ceb4a57711ab17dad08cd3
+    c01: 0e764c73a6190ca4708ea449175193f777e156aa991e98000a1a3d866e1a7965
     c01: [mark-control-plane] Marking the node c01 as control-plane by adding the labels: [node-role.kubernetes.io/control-plane node.kubernetes.io/exclude-from-external-load-balancers]
     c01: [mark-control-plane] Marking the node c01 as control-plane by adding the taints [node-role.kubernetes.io/master:NoSchedule node-role.kubernetes.io/control-plane:NoSchedule]
     c01: [bootstrap-token] Using token: abcdef.0123456789abcdef
@@ -178,8 +178,8 @@ Bringing machine 'e03' up with 'virtualbox' provider...
     c01: You can now join any number of the control-plane node running the following command on each as root:
     c01: 
     c01:   kubeadm join 192.168.10.10:6443 --token abcdef.0123456789abcdef \
-    c01: 	--discovery-token-ca-cert-hash sha256:a2980d11e5ef0e15cf8a0c8a5669d0a7beab84aa81902facc73c27582e35d5cf \
-    c01: 	--control-plane --certificate-key 7e29d6216ff6d8d4de462ad90d5977b4d6d3207f43ceb4a57711ab17dad08cd3
+    c01: 	--discovery-token-ca-cert-hash sha256:819758da0705145e74585087962e05defd9e9d90f79d5e70517586458a6ce8c0 \
+    c01: 	--control-plane --certificate-key 0e764c73a6190ca4708ea449175193f777e156aa991e98000a1a3d866e1a7965
     c01: 
     c01: Please note that the certificate-key gives access to cluster sensitive data, keep it secret!
     c01: As a safeguard, uploaded-certs will be deleted in two hours; If necessary, you can use
@@ -188,7 +188,7 @@ Bringing machine 'e03' up with 'virtualbox' provider...
     c01: Then you can join any number of worker nodes by running the following on each as root:
     c01: 
     c01: kubeadm join 192.168.10.10:6443 --token abcdef.0123456789abcdef \
-    c01: 	--discovery-token-ca-cert-hash sha256:a2980d11e5ef0e15cf8a0c8a5669d0a7beab84aa81902facc73c27582e35d5cf
+    c01: 	--discovery-token-ca-cert-hash sha256:819758da0705145e74585087962e05defd9e9d90f79d5e70517586458a6ce8c0
     c01: configmap/calico-config created
     c01: customresourcedefinition.apiextensions.k8s.io/bgpconfigurations.crd.projectcalico.org created
     c01: customresourcedefinition.apiextensions.k8s.io/bgppeers.crd.projectcalico.org created
@@ -232,7 +232,7 @@ Bringing machine 'e03' up with 'virtualbox' provider...
     c01: deployment.apps/dashboard-metrics-scraper created
 ==> c02: Cloning VM...
 [K==> c02: Matching MAC address for NAT networking...
-==> c02: Setting the name of the VM: kubeadm-ha-stacked-vagrant_c02_1651680925252_7501
+==> c02: Setting the name of the VM: kubeadm-ha-stacked-vagrant_c02_1655719579406_18597
 ==> c02: Fixed port collision for 22 => 2222. Now on port 2202.
 ==> c02: Clearing any previously set network interfaces...
 ==> c02: Preparing network interfaces based on configuration...
@@ -270,16 +270,16 @@ Bringing machine 'e03' up with 'virtualbox' provider...
     c02: [preflight] You can also perform this action in beforehand using 'kubeadm config images pull'
     c02: [download-certs] Downloading the certificates in Secret "kubeadm-certs" in the "kube-system" Namespace
     c02: [certs] Using certificateDir folder "/etc/kubernetes/pki"
-    c02: [certs] Generating "etcd/healthcheck-client" certificate and key
-    c02: [certs] Generating "etcd/server" certificate and key
-    c02: [certs] etcd/server serving cert is signed for DNS names [c02 localhost] and IPs [192.168.10.102 127.0.0.1 ::1]
+    c02: [certs] Generating "front-proxy-client" certificate and key
     c02: [certs] Generating "etcd/peer" certificate and key
     c02: [certs] etcd/peer serving cert is signed for DNS names [c02 localhost] and IPs [192.168.10.102 127.0.0.1 ::1]
+    c02: [certs] Generating "etcd/healthcheck-client" certificate and key
     c02: [certs] Generating "apiserver-etcd-client" certificate and key
+    c02: [certs] Generating "etcd/server" certificate and key
+    c02: [certs] etcd/server serving cert is signed for DNS names [c02 localhost] and IPs [192.168.10.102 127.0.0.1 ::1]
     c02: [certs] Generating "apiserver" certificate and key
     c02: [certs] apiserver serving cert is signed for DNS names [c02 kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local] and IPs [10.96.0.1 192.168.10.102 192.168.10.10]
     c02: [certs] Generating "apiserver-kubelet-client" certificate and key
-    c02: [certs] Generating "front-proxy-client" certificate and key
     c02: [certs] Valid certificates and keys now exist in "/etc/kubernetes/pki"
     c02: [certs] Using the existing "sa" key
     c02: [kubeconfig] Generating kubeconfig files
@@ -321,7 +321,7 @@ Bringing machine 'e03' up with 'virtualbox' provider...
     c02: 
 ==> c03: Cloning VM...
 [K==> c03: Matching MAC address for NAT networking...
-==> c03: Setting the name of the VM: kubeadm-ha-stacked-vagrant_c03_1651681033518_62962
+==> c03: Setting the name of the VM: kubeadm-ha-stacked-vagrant_c03_1655719687374_70753
 ==> c03: Fixed port collision for 22 => 2222. Now on port 2203.
 ==> c03: Clearing any previously set network interfaces...
 ==> c03: Preparing network interfaces based on configuration...
@@ -360,12 +360,12 @@ Bringing machine 'e03' up with 'virtualbox' provider...
     c03: [download-certs] Downloading the certificates in Secret "kubeadm-certs" in the "kube-system" Namespace
     c03: [certs] Using certificateDir folder "/etc/kubernetes/pki"
     c03: [certs] Generating "front-proxy-client" certificate and key
+    c03: [certs] Generating "etcd/healthcheck-client" certificate and key
+    c03: [certs] Generating "apiserver-etcd-client" certificate and key
     c03: [certs] Generating "etcd/server" certificate and key
     c03: [certs] etcd/server serving cert is signed for DNS names [c03 localhost] and IPs [192.168.10.103 127.0.0.1 ::1]
-    c03: [certs] Generating "apiserver-etcd-client" certificate and key
     c03: [certs] Generating "etcd/peer" certificate and key
     c03: [certs] etcd/peer serving cert is signed for DNS names [c03 localhost] and IPs [192.168.10.103 127.0.0.1 ::1]
-    c03: [certs] Generating "etcd/healthcheck-client" certificate and key
     c03: [certs] Generating "apiserver" certificate and key
     c03: [certs] apiserver serving cert is signed for DNS names [c03 kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local] and IPs [10.96.0.1 192.168.10.103 192.168.10.10]
     c03: [certs] Generating "apiserver-kubelet-client" certificate and key
@@ -410,7 +410,7 @@ Bringing machine 'e03' up with 'virtualbox' provider...
     c03: 
 ==> e01: Cloning VM...
 [K==> e01: Matching MAC address for NAT networking...
-==> e01: Setting the name of the VM: kubeadm-ha-stacked-vagrant_e01_1651681134582_96703
+==> e01: Setting the name of the VM: kubeadm-ha-stacked-vagrant_e01_1655719787065_36246
 ==> e01: Fixed port collision for 22 => 2222. Now on port 2204.
 ==> e01: Clearing any previously set network interfaces...
 ==> e01: Preparing network interfaces based on configuration...
@@ -455,7 +455,7 @@ Bringing machine 'e03' up with 'virtualbox' provider...
     e01: 
 ==> e02: Cloning VM...
 [K==> e02: Matching MAC address for NAT networking...
-==> e02: Setting the name of the VM: kubeadm-ha-stacked-vagrant_e02_1651681239103_69723
+==> e02: Setting the name of the VM: kubeadm-ha-stacked-vagrant_e02_1655719891741_1277
 ==> e02: Fixed port collision for 22 => 2222. Now on port 2205.
 ==> e02: Clearing any previously set network interfaces...
 ==> e02: Preparing network interfaces based on configuration...
@@ -500,7 +500,7 @@ Bringing machine 'e03' up with 'virtualbox' provider...
     e02: 
 ==> e03: Cloning VM...
 [K==> e03: Matching MAC address for NAT networking...
-==> e03: Setting the name of the VM: kubeadm-ha-stacked-vagrant_e03_1651681346183_6257
+==> e03: Setting the name of the VM: kubeadm-ha-stacked-vagrant_e03_1655719998218_10145
 ==> e03: Fixed port collision for 22 => 2222. Now on port 2206.
 ==> e03: Clearing any previously set network interfaces...
 ==> e03: Preparing network interfaces based on configuration...
@@ -544,39 +544,39 @@ Bringing machine 'e03' up with 'virtualbox' provider...
     e03: Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
     e03: 
 NAME   STATUS   ROLES           AGE     VERSION
-c01    Ready    control-plane   9m55s   v1.24.0
-c02    Ready    control-plane   8m11s   v1.24.0
-c03    Ready    control-plane   6m22s   v1.24.0
-e01    Ready    <none>          4m36s   v1.24.0
-e02    Ready    <none>          2m49s   v1.24.0
-e03    Ready    <none>          62s     v1.24.0
+c01    Ready    control-plane   9m52s   v1.24.2
+c02    Ready    control-plane   8m10s   v1.24.2
+c03    Ready    control-plane   6m22s   v1.24.2
+e01    Ready    <none>          4m36s   v1.24.2
+e02    Ready    <none>          2m50s   v1.24.2
+e03    Ready    <none>          62s     v1.24.2
 NAMESPACE              NAME                                         READY   STATUS    RESTARTS   AGE
-kube-system            calico-kube-controllers-77484fbbb5-q5zgb     1/1     Running   0          9m51s
-kube-system            calico-node-2rcjm                            1/1     Running   0          6m22s
-kube-system            calico-node-g7rf8                            1/1     Running   0          4m36s
-kube-system            calico-node-n2xrs                            1/1     Running   0          2m49s
-kube-system            calico-node-rqlx9                            1/1     Running   0          9m51s
-kube-system            calico-node-s25rl                            1/1     Running   0          62s
-kube-system            calico-node-v7ml2                            1/1     Running   0          8m11s
-kube-system            coredns-6d4b75cb6d-k9fts                     1/1     Running   0          9m51s
-kube-system            coredns-6d4b75cb6d-lgr58                     1/1     Running   0          9m51s
-kube-system            etcd-c01                                     1/1     Running   0          9m53s
-kube-system            etcd-c02                                     1/1     Running   0          8m1s
+kube-system            calico-kube-controllers-56cdb7c587-b2vt7     1/1     Running   0          9m49s
+kube-system            calico-node-c629r                            1/1     Running   0          9m49s
+kube-system            calico-node-dh6sc                            1/1     Running   0          2m50s
+kube-system            calico-node-kpwtc                            1/1     Running   0          6m22s
+kube-system            calico-node-m8cpv                            1/1     Running   0          8m10s
+kube-system            calico-node-txw5n                            1/1     Running   0          4m36s
+kube-system            calico-node-v47vk                            0/1     Running   0          62s
+kube-system            coredns-6d4b75cb6d-jvgkq                     1/1     Running   0          9m50s
+kube-system            coredns-6d4b75cb6d-tlvwq                     1/1     Running   0          9m51s
+kube-system            etcd-c01                                     1/1     Running   0          9m51s
+kube-system            etcd-c02                                     1/1     Running   0          8m
 kube-system            etcd-c03                                     1/1     Running   0          6m12s
-kube-system            kube-apiserver-c01                           1/1     Running   0          9m53s
-kube-system            kube-apiserver-c02                           1/1     Running   0          7m50s
+kube-system            kube-apiserver-c01                           1/1     Running   0          9m51s
+kube-system            kube-apiserver-c02                           1/1     Running   0          7m51s
 kube-system            kube-apiserver-c03                           1/1     Running   0          6m6s
-kube-system            kube-controller-manager-c01                  1/1     Running   0          9m53s
-kube-system            kube-controller-manager-c02                  1/1     Running   0          6m57s
-kube-system            kube-controller-manager-c03                  1/1     Running   0          5m2s
-kube-system            kube-proxy-55qds                             1/1     Running   0          2m49s
-kube-system            kube-proxy-8xsmt                             1/1     Running   0          8m11s
-kube-system            kube-proxy-mzcsd                             1/1     Running   0          9m52s
-kube-system            kube-proxy-rlqfl                             1/1     Running   0          4m36s
-kube-system            kube-proxy-tvmtq                             1/1     Running   0          6m22s
-kube-system            kube-proxy-xprsf                             1/1     Running   0          62s
-kube-system            kube-scheduler-c01                           1/1     Running   0          9m53s
-kube-system            kube-scheduler-c02                           1/1     Running   0          8m1s
-kube-system            kube-scheduler-c03                           1/1     Running   0          6m13s
-kubernetes-dashboard   dashboard-metrics-scraper-7bfdf779ff-7s749   1/1     Running   0          9m49s
-kubernetes-dashboard   kubernetes-dashboard-b65bbf7d9-p8dc9         1/1     Running   0          9m49s
+kube-system            kube-controller-manager-c01                  1/1     Running   0          9m51s
+kube-system            kube-controller-manager-c02                  1/1     Running   0          8m6s
+kube-system            kube-controller-manager-c03                  1/1     Running   0          5m11s
+kube-system            kube-proxy-4kqqf                             1/1     Running   0          6m22s
+kube-system            kube-proxy-crx74                             1/1     Running   0          8m10s
+kube-system            kube-proxy-cwwz2                             1/1     Running   0          9m50s
+kube-system            kube-proxy-d9jjs                             1/1     Running   0          2m50s
+kube-system            kube-proxy-rlh46                             1/1     Running   0          4m36s
+kube-system            kube-proxy-wvh4k                             1/1     Running   0          62s
+kube-system            kube-scheduler-c01                           1/1     Running   0          9m52s
+kube-system            kube-scheduler-c02                           1/1     Running   0          7m59s
+kube-system            kube-scheduler-c03                           1/1     Running   0          6m14s
+kubernetes-dashboard   dashboard-metrics-scraper-7bfdf779ff-2ghlw   1/1     Running   0          9m48s
+kubernetes-dashboard   kubernetes-dashboard-b65bbf7d9-flbtm         1/1     Running   0          9m48s
