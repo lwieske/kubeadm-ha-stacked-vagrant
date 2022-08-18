@@ -1,4 +1,4 @@
-# kubeadm-ha-stacked-vagrant / Kubernetes v1.24.3
+# kubeadm-ha-stacked-vagrant / Kubernetes v1.24.4
 
 ![](demo800x600.gif)
 
@@ -8,7 +8,7 @@ Kubernetes Cluster: kubeadm mgmt plane + (load balancer / 3 controller ctrl plan
 
 ![](images/3x3-ha-stacked.png)
 
-### K8S 1.24.3
+### K8S 1.24.4
 
 ```console
                             |
