@@ -4,7 +4,7 @@
 
 Kubernetes Cluster: kubeadm mgmt plane + (load balancer / 3 controller ctrl plane) + 3 executor data plane
 
-## Vagrant Spin Up For 2 Load Balancers + 3 Masters + 3 Workers
+## Vagrant Spin Up For 2 Load Balancers + 3 Controllers + 3 Executors
 
 ![](images/3x3-ha-stacked.png)
 
