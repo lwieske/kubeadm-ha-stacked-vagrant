@@ -27,6 +27,8 @@ $initcontroller = <<EOF
 # set -x
 export PATH=/usr/local/bin:${PATH}
 
+sudo mkdir -p /vagrant/files/{kubeconfig,params}
+
 kubeadm init \
   --apiserver-advertise-address=192.168.10.101 \
   --control-plane-endpoint=#{CONTROL_PLANE_IP} \
